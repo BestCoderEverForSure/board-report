@@ -248,6 +248,13 @@ hr.thin.light{border-color:var(--line-l);}
 .chart-box{border:1px solid var(--line-l);padding:2rem;background:rgba(255,255,255,0.5);margin-top:2rem;}
 .chart-label{font-size:0.62rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted-l);margin-bottom:1.25rem;font-weight:600;}
 .chart-note{font-size:0.73rem;color:var(--muted-l);margin-top:1rem;line-height:1.6;font-style:italic;}
+.find-card.center-lone{grid-column:1 / -1;max-width:calc(50% - 1.5rem);margin-inline:auto;}
+.lever-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2.5rem;margin-top:2.5rem;}
+.lever{border-top:2px solid var(--burg);padding-top:1.1rem;}
+.lever .lv-n{font-family:var(--serif);font-size:2rem;color:var(--burg);line-height:1;}
+.lever h4{font-family:var(--serif);font-size:1.12rem;font-weight:500;color:var(--text-l);margin:0.55rem 0 0.5rem;}
+.lever p{font-size:0.83rem;color:var(--muted-l);line-height:1.7;}
+.lever p strong{color:var(--burg);font-weight:600;}
 
 /* ─── DISCRIMINATION / AUDIT (wine dark) ─────────────── */
 #discrimination{background:var(--wine2);}
@@ -403,7 +410,8 @@ canvas{max-height:260px;}
   .hero-inner{padding:0 1.5rem;}
   .exec-grid,.mission-grid,.algo-header,.seg-grid,.disc-intro,.find-grid,
   .calc-wrap,.rec-intro,.ethics-intro,.f-charts,.discoveries,.eth-grid,
-  .deal-grid,.claim-grid,.reco-conds,.demo-wrap{grid-template-columns:1fr;}
+  .deal-grid,.claim-grid,.reco-conds,.demo-wrap,.lever-grid{grid-template-columns:1fr;}
+  .find-card.center-lone{max-width:none;grid-column:auto;}
   .reco-conds{gap:1.25rem;}
   .discoveries{border:none;}
   .disc{border:1px solid var(--line-d);border-bottom:none;padding:2rem 1.5rem;}
@@ -463,7 +471,7 @@ canvas{max-height:260px;}
     <p class="hero-sub">
       Before this acquisition closes, the board should understand how Siren Capital's algorithm actually
       values loan calls — and what patterns sit inside it. We rebuilt the bank's valuation engine to within
-      <strong>3.2% of the true value on average</strong> (graded at 96.84%), and found small but statistically
+      <strong>2.4% of the true value on average</strong> (graded at 97.64%), and found small but statistically
       unmistakable differences in outcomes by race and gender. The amounts per borrower are modest; the deal and
       regulatory risk they create is not.
     </p>
@@ -473,11 +481,11 @@ canvas{max-height:260px;}
         <div class="lbl">Calls Analyzed</div>
       </div>
       <div class="h-stat">
-        <div class="num">96.84<span>%</span></div>
+        <div class="num">97.64<span>%</span></div>
         <div class="lbl">Replication Accuracy</div>
       </div>
       <div class="h-stat">
-        <div class="num">$71</div>
+        <div class="num">$53</div>
         <div class="lbl">Mean Absolute Error</div>
       </div>
       <div class="h-stat">
@@ -505,8 +513,8 @@ canvas{max-height:260px;}
         <p class="exec-lead">We were asked to do two things before this deal closes: <strong>replicate</strong> Siren Capital's
         undisclosed loan-valuation algorithm, and <strong>audit</strong> it for fairness. We did both.</p>
         <ul class="exec-find">
-          <li><span class="efn">1</span><span>We rebuilt the black-box pricing model to <strong>96.84% accuracy</strong> (average error ~$71 on a ~$2,233 call). The logic is now transparent and explainable.</span></li>
-          <li><span class="efn">2</span><span>Most demographic gaps (rate, value) are real but tiny. Compulsory insurance is the exception — and it runs on <strong>two protected characteristics</strong>: every <strong>foreign-born</strong> borrower is forced onto it (100% vs 15%), and among native-born, <strong>Black</strong> borrowers get it 4× as often as everyone else (40% vs 10%). Neither is explained by credit score.</span></li>
+          <li><span class="efn">1</span><span>We rebuilt the black-box pricing model to <strong>97.64% accuracy</strong> (average error ~$53 on a ~$2,233 call). The logic is now transparent and explainable.</span></li>
+          <li><span class="efn">2</span><span>Most demographic gaps (rate, value) are real but tiny. Compulsory insurance is the exception — and it runs on <strong>two protected characteristics</strong>: every <strong>foreign-born</strong> borrower is forced onto it (100% vs 16%), and among native-born, <strong>Black</strong> borrowers get it 4× as often as everyone else (41% vs 10%). Neither is explained by credit score.</span></li>
           <li><span class="efn">3</span><span>The risk to this deal is <strong>not</strong> the ~$104K/year of measurable overcharging. It is the regulatory, legal and reputational exposure that a systematic protected-class pattern creates under ECOA — regardless of size or intent.</span></li>
         </ul>
         <div class="reco-pill">
@@ -520,9 +528,9 @@ canvas{max-height:260px;}
         <div class="storyboard">
           <div class="sb-head">How to read this report — 7 chapters</div>
           <a class="sb-item" href="#mission"><span class="sb-rn">I</span><span class="sb-body"><span class="tt">Context</span><br><span class="ds">Why an algorithmic audit, and why now.</span></span></a>
-          <a class="sb-item" href="#algorithm"><span class="sb-rn">II</span><span class="sb-body"><span class="tt">The Model</span><br><span class="ds">How we cracked the black box to 96.84%.</span></span></a>
+          <a class="sb-item" href="#algorithm"><span class="sb-rn">II</span><span class="sb-body"><span class="tt">The Model</span><br><span class="ds">How we cracked the black box to 97.64%.</span></span></a>
           <a class="sb-item" href="#findings"><span class="sb-rn">III</span><span class="sb-body"><span class="tt">What It Values</span><br><span class="ds">The real drivers of a call's worth.</span></span></a>
-          <a class="sb-item" href="#discrimination"><span class="sb-rn">IV</span><span class="sb-body"><span class="tt">Fairness Audit</span><br><span class="ds">Four flags — significance vs. magnitude.</span></span></a>
+          <a class="sb-item" href="#discrimination"><span class="sb-rn">IV</span><span class="sb-body"><span class="tt">Fairness Audit</span><br><span class="ds">Five flags — significance vs. magnitude.</span></span></a>
           <a class="sb-item" href="#dealrisk"><span class="sb-rn">V</span><span class="sb-body"><span class="tt">Deal Risk</span><br><span class="ds">What it means in money and exposure.</span></span></a>
           <a class="sb-item" href="#calculator"><span class="sb-rn">VI</span><span class="sb-body"><span class="tt">Simulator</span><br><span class="ds">A what-if tool for the valuation logic.</span></span></a>
           <a class="sb-item" href="#recommendations"><span class="sb-rn">VII</span><span class="sb-body"><span class="tt">Action Plan + Ethics</span><br><span class="ds">Prioritized actions and our obligations.</span></span></a>
@@ -587,7 +595,7 @@ canvas{max-height:260px;}
           <div class="m-step-num">III</div>
           <div class="m-step-body">
             <h3>The Discovery</h3>
-            <p>We achieved 96.84% accuracy — close enough to decode the algorithm's logic. In doing so, we found that race and gender are statistically significant predictors of outcomes, in ways that warrant a closer, controlled look.</p>
+            <p>We achieved 97.64% accuracy — close enough to decode the algorithm's logic. In doing so, we found that race and gender are statistically significant predictors of outcomes, in ways that warrant a closer, controlled look.</p>
           </div>
         </div>
         <div class="m-step">
@@ -625,7 +633,7 @@ canvas{max-height:260px;}
         <h2 class="s-title">How we cracked<br><em>the code.</em></h2>
       </div>
       <p class="s-desc" style="padding-top:1rem;">
-        The bank's proprietary system, treated as a black box, was opened with six per-segment, MAE-optimized gradient-boosted models trained on 231,276 historical calls — reproducing its outputs to within ~3.2% on average (graded 96.84%).
+        The bank's proprietary system, treated as a black box, was opened with six per-segment, MAE-optimized gradient-boosted models trained on 231,276 historical calls — reproducing its outputs to within ~2.4% on average (graded 97.64%).
       </p>
     </div>
 
@@ -644,9 +652,9 @@ canvas{max-height:260px;}
         <code class="formula">VALUE &asymp; 0.998 &times; Total_Paid + $88.63</code>
       </div>
       <div class="disc">
-        <div class="disc-num" style="font-size:1.4rem;padding-top:0.8rem;">$327&rarr;$138</div>
+        <div class="disc-num" style="font-size:1.4rem;padding-top:0.8rem;">$327&rarr;$84</div>
         <h3>Active Loans — Ratio Targets</h3>
-        <p>The breakthrough: predict VALUE &divide; a financial base, then multiply back — and train each model to minimize dollar error directly. On-time error fell from $327 to $138.</p>
+        <p>The breakthrough: predict VALUE &divide; a financial base, then multiply back — and train each model to minimize dollar error directly. On-time error fell from $327 to $84.</p>
         <code class="formula">VALUE = model(features) &times; base</code>
       </div>
     </div>
@@ -667,20 +675,20 @@ canvas{max-height:260px;}
             <tr><th>Segment</th><th>MAE</th><th>Error share</th><th style="text-align:right">Quality</th></tr>
           </thead>
           <tbody>
-            <tr><td>Not accepted</td><td>$13</td><td>8%</td><td><span class="q-badge q-e">Excellent</span></td></tr>
-            <tr><td>Loan closed</td><td>$42</td><td>5%</td><td><span class="q-badge q-e">Excellent</span></td></tr>
-            <tr><td>Charged off</td><td>$64</td><td>3%</td><td><span class="q-badge q-g">Good</span></td></tr>
-            <tr><td>On-time (active)</td><td>$118</td><td>66%</td><td><span class="q-badge q-f">The wall</span></td></tr>
-            <tr><td>Delinquent (30/60-day)</td><td>$228</td><td>19%</td><td><span class="q-badge q-l">Limited</span></td></tr>
-            <tr class="total"><td>Overall</td><td>$71</td><td>100%</td><td><span class="q-badge q-e">96.84%</span></td></tr>
+            <tr><td>Not accepted</td><td>$13</td><td>10%</td><td><span class="q-badge q-e">Excellent</span></td></tr>
+            <tr><td>Loan closed</td><td>$29</td><td>5%</td><td><span class="q-badge q-e">Excellent</span></td></tr>
+            <tr><td>Charged off</td><td>$64</td><td>4%</td><td><span class="q-badge q-g">Good</span></td></tr>
+            <tr><td>On-time (active)</td><td>$84</td><td>62%</td><td><span class="q-badge q-f">The wall</span></td></tr>
+            <tr><td>Delinquent (30/60-day)</td><td>$185</td><td>19%</td><td><span class="q-badge q-l">Limited</span></td></tr>
+            <tr class="total"><td>Overall</td><td>$53</td><td>100%</td><td><span class="q-badge q-e">97.64%</span></td></tr>
           </tbody>
         </table>
         <p style="font-size:0.75rem;color:var(--muted-d);margin-top:1.25rem;line-height:1.75;">
-          Rejections, closed and charged-off loans are essentially solved. The on-time (active) and delinquent segments carry ~85% of all remaining error — delinquent loans (VALUE range &minus;$31,982 to +$68,527) need external credit-bureau data the bank uses but does not share.
+          Rejections, closed and charged-off loans are essentially solved. The on-time (active) and delinquent segments carry ~80% of all remaining error — delinquent loans (VALUE range &minus;$31,982 to +$68,527) need external credit-bureau data the bank uses but does not share.
         </p>
         <details class="expand">
-          <summary>What "96.84% accuracy" means — precisely</summary>
-          <div class="inner">The score is <b>normalized mean absolute error</b>: 1 &minus; (MAE &divide; mean call value) = 1 &minus; (&asymp;$70.5 &divide; &asymp;$2,233) = <b>96.84%</b> on the 25,698 valued calls. In plain terms: our prediction lands, on average, within ~3.2% of the bank's true value. It is <em>not</em> classification accuracy and <em>not</em> R&sup2;. A key early lesson: optimizing for statistical fit (R&sup2;) actually scored worse (~90%) because it mispriced the extreme tails — so we rebuilt every model to minimize dollar error directly. Our cross-validation now tracks the live graded score to within ~0.02%.</div>
+          <summary>What "97.64% accuracy" means — precisely</summary>
+          <div class="inner">The score is <b>normalized mean absolute error</b>: 1 &minus; (MAE &divide; mean call value) = 1 &minus; (&asymp;$52.6 &divide; &asymp;$2,233) = <b>97.64%</b> on the 25,698 valued calls. In plain terms: our prediction lands, on average, within ~2.4% of the bank's true value. It is <em>not</em> classification accuracy and <em>not</em> R&sup2;. A key early lesson: optimizing for statistical fit (R&sup2;) actually scored worse (~90%) because it mispriced the extreme tails — so we rebuilt every model to minimize dollar error directly. Our cross-validation now tracks the live graded score to within ~0.02%.</div>
         </details>
       </div>
       <div>
@@ -693,9 +701,9 @@ canvas{max-height:260px;}
 
     <!-- ERROR CONTRIBUTION -->
     <div class="reveal" style="border:1px solid var(--line-d);padding:2rem;background:rgba(255,255,255,0.03);margin-top:2.5rem;">
-      <div class="chart-label" style="color:var(--muted-d);">Where the $71 of average error comes from ($ contribution by segment)</div>
-      <canvas id="errorContribChart" role="img" aria-label="Horizontal bar chart: on-time active loans contribute $46.6 to the overall $71 mean error, delinquent $13.5, not accepted $5.6, loan closed $3.5, charged off $1.8."></canvas>
-      <p style="font-size:0.73rem;color:var(--muted-d);margin-top:1rem;line-height:1.6;font-style:italic;">Two-thirds of all remaining error sits in the on-time active-loan segment — the model's known frontier and the focus of further work.</p>
+      <div class="chart-label" style="color:var(--muted-d);">Where the $53 of average error comes from ($ contribution by segment)</div>
+      <canvas id="errorContribChart" role="img" aria-label="Horizontal bar chart: on-time active loans contribute $33 to the overall $53 mean error, delinquent $10, not accepted $5.6, loan closed $2.4, charged off $1.9."></canvas>
+      <p style="font-size:0.73rem;color:var(--muted-d);margin-top:1rem;line-height:1.6;font-style:italic;">The majority (~62%) of all remaining error sits in the on-time active-loan segment — the model's known frontier and the focus of further work.</p>
     </div>
   </div>
 </section>
@@ -728,7 +736,11 @@ canvas{max-height:260px;}
       </div>
       <div class="find-card">
         <h3>What's Missing — External Data</h3>
-        <p>The bank's model clearly draws on credit-bureau recovery rates and market-risk factors absent from the call ledger. This explains the remaining ~3.2% accuracy gap — and, plausibly, much of the demographic variation we observe.</p>
+        <p>The bank's model clearly draws on credit-bureau recovery rates and market-risk factors absent from the call ledger. This explains the remaining ~2.4% accuracy gap — and, plausibly, much of the demographic variation we observe.</p>
+      </div>
+      <div class="find-card center-lone">
+        <h3>The Customer Is Worth More Than the Loan</h3>
+        <p>A performing loan is valued at roughly <strong>1.35&times; its entire projected cash flow</strong> — about $4,190 of VALUE on ~$3,090 of expected payments. The bank is pricing the <em>customer relationship</em> (future borrowing and retention), not just the loan — so relationship depth, not loan size, is the clearest lever to raise value per future caller.</p>
       </div>
     </div>
 
@@ -736,6 +748,29 @@ canvas{max-height:260px;}
       <div class="chart-label">Top value drivers — relative feature importance</div>
       <canvas id="featureChart" role="img" aria-label="Horizontal bar chart of relative feature importance: repayment ratio is most important at 100, followed by total paid, outstanding principal, payment completion, and others."></canvas>
       <p class="chart-note">Importance is shown on a relative 0–100 scale (top driver = 100), derived from the active-loan models. It ranks drivers; it is not a percentage of VALUE.</p>
+    </div>
+
+    <div class="reveal" style="margin-top:4.5rem;border-top:1px solid var(--line-l);padding-top:3rem;">
+      <span class="s-tag" style="color:var(--burg);">— Practical Implication · Phase 3</span>
+      <h3 style="font-family:var(--serif);font-size:1.9rem;font-weight:400;color:var(--text-l);margin:0.4rem 0 0.6rem;line-height:1.15;">Three levers to raise value <em style="font-style:italic;color:var(--burg);">per future caller</em></h3>
+      <p style="font-size:0.9rem;color:var(--muted-l);line-height:1.8;max-width:660px;">The drivers that explain VALUE also show where management can grow it — ranked by impact per call. Each assumes the <em>remediated, fair</em> model; none should be pursued through the protected-class patterns flagged in the audit.</p>
+      <div class="lever-grid">
+        <div class="lever">
+          <div class="lv-n">01</div>
+          <h4>Convert more applicants</h4>
+          <p>A rejected call is worth ~$55; a performing loan ~$4,200 — an <strong>~80× jump</strong>. Extending fair, risk-based approval to creditworthy applicants who are currently declined is the single biggest move on average value per caller.</p>
+        </div>
+        <div class="lever">
+          <div class="lv-n">02</div>
+          <h4>Keep loans performing</h4>
+          <p>Value swings by orders of magnitude with repayment status. Early-intervention collections and outreach that move borrowers from the delinquent band back to on-time protect the <strong>highest-value</strong> part of the book.</p>
+        </div>
+        <div class="lever">
+          <div class="lv-n">03</div>
+          <h4>Deepen the relationship</h4>
+          <p>A performing loan is valued at ~1.35× its own cash flow — about a third of its worth is the <strong>relationship</strong>. Cross-sell, retention and repeat lending grow that premium directly, lifting value per caller without a single larger loan.</p>
+        </div>
+      </div>
     </div>
   </div>
 </section>
@@ -770,7 +805,7 @@ canvas{max-height:260px;}
       <div class="sm-row">
         <div class="sm-name" style="color:var(--burg2);">★ Race &rarr; compulsory insurance</div>
         <div class="sm-sig">&chi;&sup2; = 8,489 · z = 92 · p &lt; 10&#8315;&#179;&#8304;&#8304;</div>
-        <div class="sm-mag"><strong>Black 48.0% vs White 21.8%</strong> — 2.2&times; as often, a 26 pp gap that <strong>holds in every credit-score band</strong>. Large <em>and</em> robust — the headline finding.</div>
+        <div class="sm-mag"><strong>Black 48.9% vs White 22.0%</strong> — 2.2&times; as often, a 27 pp gap that <strong>holds in every credit-score band</strong>. Large <em>and</em> robust — the headline finding.</div>
       </div>
       <div class="sm-row">
         <div class="sm-name">Race &rarr; call VALUE</div>
@@ -805,11 +840,11 @@ canvas{max-height:260px;}
         </div>
         <div class="pstat">z = 92 · p &lt; 10&#8315;&#179;&#8304;&#8304;</div>
       </div>
-      <p class="plain-stat">Loan amounts are essentially equal across races (a 2.6% spread). Insurance is not: <b>White 21.8% · SOR 26.7% · Asian 27.2% · Black 48.0%</b>. Mean credit scores are near-identical (696–699), and the ~26 pp Black–White gap persists in <b>every credit-score quintile</b> — so creditworthiness does not explain it.</p>
+      <p class="plain-stat">Loan amounts are essentially equal across races (a 2.6% spread). Insurance is not: <b>White 22.0% · SOR 27.0% · Asian 26.3% · Black 48.9%</b>. Mean credit scores are near-identical (696–699), and the ~27 pp Black–White gap persists in <b>every credit-score quintile</b> — so creditworthiness does not explain it.</p>
       <div class="f-charts">
         <div class="f-chart-box">
           <div class="chart-label">Compulsory-insurance rate by race (%)</div>
-          <canvas id="insuranceRaceChart" role="img" aria-label="Bar chart: compulsory insurance rate by race — White 21.8%, Some Other Race 26.7%, Asian 27.2%, Black 48.0%."></canvas>
+          <canvas id="insuranceRaceChart" role="img" aria-label="Bar chart: compulsory insurance rate by race — White 22.0%, Some Other Race 27.0%, Asian 26.3%, Black 48.9%."></canvas>
         </div>
         <div class="f-chart-box">
           <div class="chart-label">…and it holds at every credit-score level</div>
@@ -819,7 +854,7 @@ canvas{max-height:260px;}
       </div>
       <details class="expand">
         <summary>Why this is the strongest finding — and what it means</summary>
-        <div class="inner">Unlike the rate and VALUE gaps (real but tiny), this effect is <b>large, adverse and robust</b>. Compulsory insurance is an added cost and condition imposed on the borrower. Black-alone applicants carry it 2.2× as often (48.0% vs 21.8%) — a 26 pp gap that is stable across all five credit-score quintiles, and credit scores are near-identical across groups. Notably, for Black borrowers the rate <b>rises from 36.8% at the initial offer to 48.0% in the final terms</b> — insurance is added during finalisation — while it is unchanged for every other group. This is the clearest disparate-impact signal in the data and the one we would lead with. We have since traced the mechanism (next): it runs on national origin and, separately, race — surviving controls for credit score, nativity and geography. It remains observational, but the obvious legitimate explanations are already ruled out.</div>
+        <div class="inner">Unlike the rate and VALUE gaps (real but tiny), this effect is <b>large, adverse and robust</b>. Compulsory insurance is an added cost and condition imposed on the borrower. Black-alone applicants carry it 2.2× as often (48.9% vs 22.0%) — a 27 pp gap that is stable across all five credit-score quintiles, and credit scores are near-identical across groups. Notably, for Black borrowers the rate <b>rises from 37.2% at the initial offer to 48.9% in the final terms</b> — insurance is added during finalisation — while it is unchanged for every other group. This is the clearest disparate-impact signal in the data and the one we would lead with. We have since traced the mechanism (next): it runs on national origin and, separately, race — surviving controls for credit score, nativity and geography. It remains observational, but the obvious legitimate explanations are already ruled out.</div>
       </details>
     </div>
 
@@ -836,16 +871,16 @@ canvas{max-height:260px;}
       <div class="f-charts">
         <div class="f-chart-box">
           <div class="chart-label">Mechanism 1 — national origin</div>
-          <canvas id="insuranceNativChart" role="img" aria-label="Bar chart: 100% of foreign-born borrowers receive compulsory insurance versus 15.3% of native-born."></canvas>
-          <p class="chart-note">Every foreign-born borrower (100%) is placed on compulsory insurance, vs 15% of native-born. National origin is itself protected under ECOA.</p>
+          <canvas id="insuranceNativChart" role="img" aria-label="Bar chart: 100% of foreign-born borrowers receive compulsory insurance versus 15.6% of native-born."></canvas>
+          <p class="chart-note">Every foreign-born borrower (100%) is placed on compulsory insurance, vs 16% of native-born. National origin is itself protected under ECOA.</p>
         </div>
         <div class="f-chart-box">
           <div class="chart-label">Mechanism 2 — race, among native-born only</div>
-          <canvas id="insuranceNativeRaceChart" role="img" aria-label="Bar chart: among native-born borrowers insurance is 10% for White, Some Other Race and Asian, but 40.1% for Black."></canvas>
+          <canvas id="insuranceNativeRaceChart" role="img" aria-label="Bar chart: among native-born borrowers insurance is 10% for White, Some Other Race and Asian, but 40.9% for Black."></canvas>
           <p class="chart-note">Holding nativity constant, only Black native-born borrowers are singled out — 4× every other native-born group.</p>
         </div>
       </div>
-      <p class="plain-stat">Foreign-born share is <b>identical for Black and White</b> borrowers (13.1%), so nativity explains <b>0%</b> of the race gap. The Black effect survives controls for <b>both nativity and credit score</b> — a direct race pattern, not a proxy. That leaves the board with <b>two separate ECOA exposures</b>: national origin and race.</p>
+      <p class="plain-stat">Foreign-born share is <b>near-identical for Black and White</b> borrowers (13.5% vs 13.2%), so nativity explains essentially <b>none</b> of the race gap. The Black effect survives controls for <b>both nativity and credit score</b> — a direct race pattern, not a proxy. That leaves the board with <b>two separate ECOA exposures</b>: national origin and race.</p>
     </div>
 
     <!-- FINDING 1 -->
@@ -974,7 +1009,7 @@ canvas{max-height:260px;}
     <details class="expand" style="margin-top:2.5rem;">
       <summary>What we would check next — to confirm or clear each flag</summary>
       <div class="inner">
-        1 — A controlled, multivariate analysis that holds credit risk (credit score, debt-to-income, geography) constant. This is the single most important next step before any conclusion.<br><br>
+        1 — A controlled, multivariate analysis that holds credit risk (credit score, debt-to-income, geography) constant. This is the single most important next step before any conclusion. We also screened two further ECOA-protected classes &mdash; marital status and age: marital status shows a modest, likely age-driven rate spread (never-married ~14.7% vs widowed ~15.6%, ~0.9 pp), folded into the same controlled review.<br><br>
         2 — TESTED ✓ Confirmed and traced. The disparity is in <strong style="color:var(--cream);font-weight:500;">compulsory insurance</strong>, not the loan amount, and runs on two protected dimensions — national origin (100% of foreign-born) and race (native-born Black 4×). It survives credit-score, nativity and geography controls (see the headline finding). Remaining: loan-purpose and property-value checks would only further isolate it.<br><br>
         3 — Robustness to multiple-comparison corrections and to alternative model specifications.<br><br>
         4 — Whether the race–VALUE gap survives once realized repayment behaviour is controlled for, given that VALUE is partly a function of repayment.
@@ -1131,7 +1166,7 @@ canvas{max-height:260px;}
         <div class="calc-value" id="calcResult">$1,970</div>
         <div class="calc-seg-name" id="calcSeg">On-Time Medium Loan Segment</div>
         <p class="calc-note">
-          Based on our reverse-engineered model; the segment's average error is shown above. Overall accuracy: <strong>96.84%</strong> (graded; MAE ≈ $71 vs. mean call value ≈ $2,233).
+          Based on our reverse-engineered model; the segment's average error is shown above. Overall accuracy: <strong>97.64%</strong> (graded; MAE ≈ $53 vs. mean call value ≈ $2,233).
         </p>
         <p class="calc-disclaimer">
           How to read this: <em>Rejected</em> and <em>Loan Closed</em> use the bank's near-exact recovered formulas; active-loan segments use a simplified illustration of our models. Greyed-out inputs are the ones a given status doesn't depend on — that's expected, not a bug — and the Loan Amount range adapts to the selected segment.
@@ -1253,7 +1288,7 @@ canvas{max-height:260px;}
         <div class="rec-row-num">06</div>
         <div class="rec-row-body">
           <h3>Leverage the Algorithm's Accuracy as an Asset</h3>
-          <p>Our 96.84% replication shows Siren's valuation methodology is highly systematic. Once remediated for fairness, it is genuine intellectual property for portfolio management and pricing — a reason this deal can still be value-creating.</p>
+          <p>Our 97.64% replication shows Siren's valuation methodology is highly systematic. Once remediated for fairness, it is genuine intellectual property for portfolio management and pricing — a reason this deal can still be value-creating.</p>
           <p class="rec-meta"><b>Owner:</b> Portfolio operations &nbsp;·&nbsp; <b>First step:</b> after remediation, scope a productized pricing engine.</p>
         </div>
         <div class="rec-tag long">Strategic</div>
@@ -1321,8 +1356,8 @@ canvas{max-height:260px;}
     <div class="footer-group">Group 007 · Board Intelligence Report</div>
   </div>
   <div class="footer-meta">
-    <div>231,276 training calls · 25,698 calls valued &amp; graded at 96.84%</div>
-    <div>Accuracy 96.84% = 1 − (MAE ≈ $70.5 ÷ mean call value ≈ $2,233) — normalized MAE</div>
+    <div>231,276 training calls · 25,698 calls valued &amp; graded at 97.64%</div>
+    <div>Accuracy 97.64% = 1 − (MAE ≈ $52.6 ÷ mean call value ≈ $2,233) — normalized MAE</div>
     <div>Methods: ANOVA, Chi-square, two-sample t-tests (unadjusted) · effect sizes reported · controlled audit recommended</div>
     <div style="margin-top:0.5rem;color:rgba(196,168,160,0.5);font-size:0.68rem;">Confidential — prepared for internal board use only</div>
   </div>
@@ -1429,7 +1464,7 @@ new Chart(document.getElementById('errorContribChart'),{
   type:'bar',
   data:{
     labels:['On-time (active)','Delinquent','Not accepted','Loan closed','Charged off'],
-    datasets:[{data:[46.6,13.5,5.6,3.5,1.8],backgroundColor:['#8b2c3e','#c4614d','#d4856a','#bba89a','#a09090'],borderWidth:0}]
+    datasets:[{data:[33.1,10.2,5.6,2.4,1.9],backgroundColor:['#8b2c3e','#c4614d','#d4856a','#bba89a','#a09090'],borderWidth:0}]
   },
   options:{
     indexAxis:'y',responsive:true,maintainAspectRatio:true,
@@ -1566,7 +1601,7 @@ new Chart(document.getElementById('insuranceRaceChart'),{
   type:'bar',
   data:{
     labels:['White alone','Some Other Race','Asian alone','Black alone'],
-    datasets:[{data:[21.8,26.7,27.2,48.0],backgroundColor:['#4a1028','#7a2336','#8b2c3e','#c4614d'],borderWidth:0}]
+    datasets:[{data:[22.0,27.0,26.3,48.9],backgroundColor:['#4a1028','#7a2336','#8b2c3e','#c4614d'],borderWidth:0}]
   },
   options:{
     responsive:true,maintainAspectRatio:true,layout:{padding:{top:18}},
@@ -1584,10 +1619,10 @@ new Chart(document.getElementById('insuranceControlChart'),{
   data:{
     labels:['Q1 low','Q2','Q3','Q4','Q5 high'],
     datasets:[
-      {label:'Black alone',     data:[47.4,49.0,47.1,48.1,48.3], borderColor:'#c4614d', backgroundColor:'#c4614d', borderWidth:2.5, tension:0.2, pointRadius:3},
+      {label:'Black alone',     data:[49.0,50.0,48.3,47.8,49.3], borderColor:'#c4614d', backgroundColor:'#c4614d', borderWidth:2.5, tension:0.2, pointRadius:3},
       {label:'Asian alone',     data:[25.0,26.1,28.5,27.8,28.6], borderColor:'#8b2c3e', backgroundColor:'#8b2c3e', borderWidth:1.5, tension:0.2, pointRadius:2},
       {label:'Some Other Race', data:[25.3,28.0,26.2,26.7,27.7], borderColor:'#bba89a', backgroundColor:'#bba89a', borderWidth:1.5, tension:0.2, pointRadius:2},
-      {label:'White alone',     data:[21.7,21.7,21.7,22.0,21.8], borderColor:'#c4a8a0', backgroundColor:'#c4a8a0', borderWidth:1.5, borderDash:[4,3], tension:0.2, pointRadius:2}
+      {label:'White alone',     data:[21.6,22.1,21.8,22.5,21.8], borderColor:'#c4a8a0', backgroundColor:'#c4a8a0', borderWidth:1.5, borderDash:[4,3], tension:0.2, pointRadius:2}
     ]
   },
   options:{
@@ -1603,7 +1638,7 @@ new Chart(document.getElementById('insuranceControlChart'),{
 // ─── INSURANCE BY NATIVITY (mechanism 1) ──────────────────────────────────
 new Chart(document.getElementById('insuranceNativChart'),{
   type:'bar',
-  data:{labels:['Foreign-born','Native-born'],datasets:[{data:[100.0,15.3],backgroundColor:['#c4614d','#4a1028'],borderWidth:0,barThickness:70}]},
+  data:{labels:['Foreign-born','Native-born'],datasets:[{data:[100.0,15.6],backgroundColor:['#c4614d','#4a1028'],borderWidth:0,barThickness:70}]},
   options:{responsive:true,maintainAspectRatio:true,layout:{padding:{top:18}},
     plugins:{legend:{display:false},valueLabels:{color:CREAM,fmt:v=>v.toFixed(1)+'%'}},
     scales:{y:{beginAtZero:true,max:112,ticks:{callback:v=>v+'%',color:MUTED,font:{family:"'Inter',sans-serif",size:10}},grid:{color:'rgba(255,255,255,0.06)'},border:{display:false}},
@@ -1613,7 +1648,7 @@ new Chart(document.getElementById('insuranceNativChart'),{
 // ─── INSURANCE BY RACE, NATIVE-BORN ONLY (mechanism 2) ─────────────────────
 new Chart(document.getElementById('insuranceNativeRaceChart'),{
   type:'bar',
-  data:{labels:['White alone','Some Other Race','Asian alone','Black alone'],datasets:[{data:[10.0,10.0,10.2,40.1],backgroundColor:['#4a1028','#7a2336','#8b2c3e','#c4614d'],borderWidth:0}]},
+  data:{labels:['White alone','Some Other Race','Asian alone','Black alone'],datasets:[{data:[10.1,9.9,9.5,40.9],backgroundColor:['#4a1028','#7a2336','#8b2c3e','#c4614d'],borderWidth:0}]},
   options:{responsive:true,maintainAspectRatio:true,layout:{padding:{top:18}},
     plugins:{legend:{display:false},valueLabels:{color:CREAM,fmt:v=>v.toFixed(1)+'%'}},
     scales:{y:{beginAtZero:true,max:48,ticks:{callback:v=>v+'%',color:MUTED,font:{family:"'Inter',sans-serif",size:10}},grid:{color:'rgba(255,255,255,0.06)'},border:{display:false}},
@@ -1623,12 +1658,12 @@ new Chart(document.getElementById('insuranceNativeRaceChart'),{
 // ─── CALCULATOR (value simulator) ──────────────────────────────────────────
 const SEG = {
   rejected:      {uses:[],                                   amt:[100,8000], err:13,  name:'No-Repayment Segment',       note:'Rejected calls are valued near $55 — independent of the inputs below.'},
-  closed:        {uses:['totalPaid'],                        amt:[100,8000], err:42,  name:'Loan Closed Segment',        note:'Value tracks the total amount repaid; loan amount and outstanding are not used.'},
-  on_time_small: {uses:['loanAmt','totalPaid','outstanding'], amt:[100,1000],  err:90,  name:'On-Time Small Loan Segment',  note:'Loan amount is constrained to ≤$1,000 for this segment.'},
-  on_time_med:   {uses:['loanAmt','totalPaid','outstanding'], amt:[1000,3000], err:118, name:'On-Time Medium Loan Segment', note:'Loan amount is constrained to $1,000–$3,000 for this segment.'},
-  on_time_large: {uses:['loanAmt','totalPaid','outstanding'], amt:[3000,8000], err:200, name:'On-Time Large Loan Segment',  note:'Loan amount is constrained to >$3,000; large loans carry the most error.'},
+  closed:        {uses:['totalPaid'],                        amt:[100,8000], err:29,  name:'Loan Closed Segment',        note:'Value tracks the total amount repaid; loan amount and outstanding are not used.'},
+  on_time_small: {uses:['loanAmt','totalPaid','outstanding'], amt:[100,1000],  err:64,  name:'On-Time Small Loan Segment',  note:'Loan amount is constrained to ≤$1,000 for this segment.'},
+  on_time_med:   {uses:['loanAmt','totalPaid','outstanding'], amt:[1000,3000], err:84, name:'On-Time Medium Loan Segment', note:'Loan amount is constrained to $1,000–$3,000 for this segment.'},
+  on_time_large: {uses:['loanAmt','totalPaid','outstanding'], amt:[3000,8000], err:142, name:'On-Time Large Loan Segment',  note:'Loan amount is constrained to >$3,000; large loans carry the most error.'},
   charged_off:   {uses:['totalPaid'],                        amt:[100,8000], err:64,  name:'Charged-Off Segment',        note:'Value tracks partial repayments recovered; based on total paid.'},
-  delinquent:    {uses:['totalPaid','outstanding'],          amt:[100,8000], err:228, name:'Delinquent Segment',         note:'Uses outstanding balance and total paid; high uncertainty (±$228).'}
+  delinquent:    {uses:['totalPaid','outstanding'],          amt:[100,8000], err:185, name:'Delinquent Segment',         note:'Uses outstanding balance and total paid; high uncertainty (±$185).'}
 };
 function configFields(){
   const cfg=SEG[document.getElementById('calcStatus').value];
