@@ -1,0 +1,1699 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Siren Capital — Board Intelligence Report | Group 007</title>
+<meta name="description" content="Group 007 — Board Intelligence Report: replicating Siren Capital's loan-valuation algorithm and auditing it for fairness ahead of acquisition.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+:root {
+  --hero:    #1e1a12;
+  --warm:    #2a2016;
+  --light:   #edf0f7;
+  --light2:  #e2e6f0;
+  --wine:    #4a1028;
+  --wine2:   #3a0c1f;
+  --burg:    #8b2c3e;
+  --burg2:   #c4614d;
+  --cream:   #f5f0eb;
+  --text-d:  #f5f0eb;
+  --text-l:  #1e1810;
+  --muted-d: #c4a8a0;
+  --muted-l: #6b5c56;
+  --green:   #3f7a5a;
+  --line-d:  rgba(255,255,255,0.12);
+  --line-l:  rgba(30,24,16,0.12);
+  --serif: 'Cormorant Garamond', Georgia, serif;
+  --sans: 'Inter', system-ui, sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--light);color:var(--text-l);font-family:var(--sans);font-weight:300;line-height:1.7;overflow-x:hidden;}
+
+/* ─── SCROLL PROGRESS ─────────────────────────────────── */
+#progress{position:fixed;top:0;left:0;height:2px;width:0;z-index:300;
+  background:linear-gradient(90deg,var(--burg),var(--burg2));}
+
+/* ─── REVEAL (no-JS safe) ─────────────────────────────── */
+.js .reveal{opacity:0;transform:translateY(16px);transition:opacity .7s ease,transform .7s ease;}
+.js .reveal.in{opacity:1;transform:none;}
+
+/* ─── NAV ─────────────────────────────────────────────── */
+nav{
+  position:fixed;top:0;width:100%;z-index:200;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 2.5rem;height:62px;
+  background:rgba(30,26,18,0.92);
+  backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--line-d);
+}
+.nav-brand{
+  font-family:var(--serif);font-weight:300;font-size:1rem;
+  letter-spacing:0.12em;color:var(--cream);text-transform:lowercase;
+}
+.nav-group{
+  font-size:0.68rem;font-weight:600;letter-spacing:0.25em;
+  color:var(--burg2);text-transform:uppercase;
+}
+.nav-links{display:flex;gap:1.35rem;}
+.nav-links a{
+  font-size:0.7rem;letter-spacing:0.08em;color:rgba(245,240,235,0.55);
+  text-decoration:none;text-transform:uppercase;
+  transition:color 0.3s;white-space:nowrap;
+}
+.nav-links a:hover{color:var(--cream);}
+
+/* ─── HERO ────────────────────────────────────────────── */
+#hero{
+  min-height:100vh;
+  display:flex;flex-direction:column;justify-content:flex-end;
+  padding:0 0 6rem;
+  background:
+    radial-gradient(ellipse at 60% 30%, rgba(139,44,62,0.18) 0%,transparent 55%),
+    radial-gradient(ellipse at 20% 80%, rgba(196,97,77,0.12) 0%,transparent 50%),
+    linear-gradient(165deg, #1e1a12 0%, #2a2016 40%, #1a150d 100%);
+  position:relative;overflow:hidden;padding-top:62px;
+}
+.hero-bg-text{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  font-family:var(--serif);font-size:clamp(14rem,22vw,28rem);font-weight:300;
+  color:rgba(255,255,255,0.025);white-space:nowrap;
+  pointer-events:none;user-select:none;letter-spacing:-0.04em;
+  line-height:1;
+}
+.hero-inner{
+  max-width:1180px;margin:0 auto;padding:0 3rem;
+  position:relative;z-index:1;
+}
+.hero-eyebrow{
+  display:flex;align-items:center;gap:1.5rem;margin-bottom:3rem;flex-wrap:wrap;
+}
+.hero-tag{
+  font-size:0.65rem;font-weight:500;letter-spacing:0.25em;
+  text-transform:uppercase;color:var(--burg2);
+  border:1px solid rgba(196,97,77,0.35);
+  padding:5px 14px;border-radius:2px;
+}
+.hero-line{width:60px;height:1px;background:var(--burg2);opacity:0.5;}
+.hero-title{
+  font-family:var(--serif);
+  font-size:clamp(3rem,7vw,7rem);
+  font-weight:300;line-height:1.05;
+  color:var(--cream);letter-spacing:-0.02em;
+  margin-bottom:2.5rem;
+}
+.hero-title em{font-style:italic;color:var(--burg2);}
+.hero-title strong{font-weight:400;}
+.hero-sub{
+  font-size:0.95rem;color:rgba(245,240,235,0.62);
+  max-width:600px;line-height:1.8;
+  margin-bottom:4rem;
+  font-weight:300;
+}
+.hero-sub strong{color:var(--cream);font-weight:500;}
+.hero-stats{
+  display:flex;gap:3rem;flex-wrap:wrap;
+  border-top:1px solid var(--line-d);padding-top:2.5rem;
+}
+.h-stat .num{
+  font-family:var(--serif);font-size:2.8rem;font-weight:300;
+  color:var(--cream);line-height:1;letter-spacing:-0.02em;
+}
+.h-stat .num span{font-size:1.6rem;}
+.h-stat .lbl{
+  font-size:0.68rem;letter-spacing:0.2em;text-transform:uppercase;
+  color:rgba(245,240,235,0.45);margin-top:0.4rem;
+}
+.scroll-hint{
+  position:absolute;bottom:2.5rem;left:50%;transform:translateX(-50%);
+  display:flex;flex-direction:column;align-items:center;gap:0.5rem;
+  color:rgba(245,240,235,0.3);font-size:0.65rem;letter-spacing:0.2em;
+  text-transform:uppercase;
+}
+.scroll-arrow{
+  width:1px;height:40px;background:linear-gradient(to bottom,rgba(245,240,235,0.3),transparent);
+  animation:scrollPulse 2s ease-in-out infinite;
+}
+@keyframes scrollPulse{0%,100%{opacity:0.3;transform:scaleY(1);}50%{opacity:0.8;transform:scaleY(1.15);}}
+
+/* ─── SECTION SHARED ──────────────────────────────────── */
+.container{max-width:1100px;margin:0 auto;padding:0 3rem;}
+section{padding:7rem 0;}
+.s-tag{
+  font-size:0.65rem;letter-spacing:0.25em;text-transform:uppercase;
+  font-weight:600;margin-bottom:1.25rem;display:block;
+}
+.s-title{
+  font-family:var(--serif);
+  font-size:clamp(2.2rem,5vw,4rem);
+  font-weight:300;line-height:1.1;letter-spacing:-0.02em;
+  margin-bottom:2rem;
+}
+.s-title em{font-style:italic;}
+.s-desc{font-size:0.92rem;line-height:1.85;font-weight:300;max-width:540px;}
+hr.thin{border:none;border-top:1px solid;margin:3rem 0;}
+hr.thin.dark{border-color:var(--line-d);}
+hr.thin.light{border-color:var(--line-l);}
+
+/* ─── EXECUTIVE BRIEFING (light) ──────────────────────── */
+#summary{background:var(--light2);}
+#summary .s-tag{color:var(--burg);}
+#summary .s-title{color:var(--text-l);}
+.exec-grid{display:grid;grid-template-columns:1.15fr 0.85fr;gap:4rem;margin-top:2.5rem;align-items:start;}
+.exec-lead{font-size:1.02rem;color:var(--text-l);line-height:1.7;font-weight:400;margin-bottom:0.5rem;}
+.exec-find{list-style:none;margin:1.25rem 0 0;}
+.exec-find li{display:flex;gap:1rem;padding:1.1rem 0;border-top:1px solid var(--line-l);font-size:0.9rem;color:var(--muted-l);line-height:1.7;}
+.exec-find li:first-child{border-top:none;}
+.exec-find li .efn{font-family:var(--serif);color:var(--burg);font-size:1.2rem;flex-shrink:0;line-height:1.2;}
+.exec-find li strong{font-weight:600;color:var(--text-l);}
+.reco-pill{border:1px solid rgba(139,44,62,0.3);background:rgba(139,44,62,0.06);border-radius:2px;padding:1.5rem 1.75rem;margin-top:2rem;}
+.reco-pill .rl{font-size:0.62rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--burg);font-weight:600;}
+.reco-pill .rt{font-family:var(--serif);font-size:1.6rem;color:var(--text-l);font-weight:400;margin:0.4rem 0 0.5rem;}
+.reco-pill p{font-size:0.85rem;color:var(--muted-l);line-height:1.7;}
+.storyboard{border:1px solid var(--line-l);background:rgba(255,255,255,0.55);}
+.sb-head{font-size:0.62rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--muted-l);font-weight:600;padding:1.15rem 1.5rem;border-bottom:1px solid var(--line-l);}
+.sb-item{display:flex;gap:1rem;align-items:baseline;padding:0.8rem 1.5rem;border-bottom:1px solid var(--line-l);text-decoration:none;transition:background 0.2s;}
+.sb-item:last-child{border-bottom:none;}
+.sb-item:hover{background:rgba(139,44,62,0.05);}
+.sb-rn{font-family:var(--serif);font-size:0.82rem;color:var(--burg);min-width:2.2rem;flex-shrink:0;}
+.sb-body .tt{font-size:0.86rem;color:var(--text-l);font-weight:500;}
+.sb-body .ds{font-size:0.76rem;color:var(--muted-l);line-height:1.5;}
+.claim-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.75rem;margin-top:2.5rem;}
+.claim{border:1px solid var(--line-l);padding:1.75rem;background:rgba(255,255,255,0.5);}
+.claim h4{font-family:var(--serif);font-size:1.1rem;font-weight:500;margin-bottom:0.9rem;display:flex;align-items:center;gap:0.5rem;}
+.claim.can h4{color:var(--green);}
+.claim.cannot h4{color:var(--burg);}
+.claim ul{list-style:none;}
+.claim li{font-size:0.84rem;color:var(--muted-l);line-height:1.55;padding:0.45rem 0 0.45rem 1.3rem;position:relative;}
+.claim li::before{position:absolute;left:0;top:0.45rem;font-weight:600;}
+.claim.can li::before{content:"\2713";color:var(--green);}
+.claim.cannot li::before{content:"\2715";color:var(--burg);}
+
+/* ─── CONTEXT SECTION (light) ─────────────────────────── */
+#mission{background:var(--light);}
+#mission .s-tag{color:var(--burg);}
+#mission .s-title{color:var(--text-l);}
+#mission .s-desc{color:var(--muted-l);}
+.mission-grid{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:start;margin-top:4rem;}
+.m-step{display:flex;gap:2rem;padding:1.75rem 0;border-bottom:1px solid var(--line-l);}
+.m-step:first-child{border-top:1px solid var(--line-l);}
+.m-step-num{font-family:var(--serif);font-size:0.7rem;letter-spacing:0.15em;color:var(--burg);flex-shrink:0;padding-top:0.2rem;font-weight:600;}
+.m-step-body h3{font-family:var(--serif);font-size:1.2rem;font-weight:400;color:var(--text-l);margin-bottom:0.4rem;}
+.m-step-body p{font-size:0.85rem;color:var(--muted-l);line-height:1.75;}
+.mission-aside .big-stat{font-family:var(--serif);font-size:5rem;font-weight:300;color:var(--burg);line-height:1;letter-spacing:-0.03em;margin-bottom:0.5rem;}
+.mission-aside p{font-size:0.88rem;color:var(--muted-l);line-height:1.8;margin-bottom:2rem;}
+.alert-box{border:1px solid;border-radius:2px;padding:1.5rem;margin-top:1.5rem;}
+.alert-box.warn{border-color:rgba(139,44,62,0.3);background:rgba(139,44,62,0.05);}
+.alert-box h4{font-family:var(--serif);font-size:1rem;font-weight:500;color:var(--burg);margin-bottom:0.5rem;}
+.alert-box p{font-size:0.83rem;color:var(--muted-l);line-height:1.75;}
+
+/* ─── ALGORITHM SECTION (wine dark) ──────────────────── */
+#algorithm{background:var(--wine);color:var(--text-d);}
+#algorithm .s-tag{color:var(--burg2);}
+#algorithm .s-title{color:var(--cream);}
+#algorithm .s-desc{color:var(--muted-d);}
+.algo-header{display:grid;grid-template-columns:1fr 1fr;gap:5rem;margin-bottom:3rem;}
+.discoveries{display:grid;grid-template-columns:repeat(3,1fr);gap:0;margin-bottom:3rem;border:1px solid var(--line-d);}
+.disc{padding:2.5rem 2rem;border-right:1px solid var(--line-d);}
+.disc:last-child{border-right:none;}
+.disc-num{font-family:var(--serif);font-size:2.5rem;font-weight:300;color:var(--burg2);line-height:1;margin-bottom:1rem;}
+.disc h3{font-family:var(--serif);font-size:1.05rem;font-weight:400;color:var(--cream);margin-bottom:0.6rem;}
+.disc p{font-size:0.81rem;color:var(--muted-d);line-height:1.75;}
+.formula{font-family:'Courier New',monospace;font-size:0.78rem;color:var(--burg2);background:rgba(255,255,255,0.04);border:1px solid var(--line-d);padding:0.6rem 0.9rem;border-radius:2px;margin-top:0.75rem;display:block;letter-spacing:0.03em;}
+.seg-grid{display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:start;}
+.seg-table{width:100%;border-collapse:collapse;}
+.seg-table th{font-size:0.62rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted-d);padding:0.6rem 0;border-bottom:1px solid var(--line-d);text-align:left;font-weight:500;}
+.seg-table td{padding:0.7rem 0;border-bottom:1px solid rgba(255,255,255,0.06);font-size:0.82rem;color:var(--muted-d);}
+.seg-table td:first-child{color:var(--cream);}
+.seg-table td:last-child{text-align:right;}
+.seg-table tr.total td{color:var(--cream);border-bottom:none;font-weight:400;}
+.seg-table tr.total td:first-child{color:var(--burg2);}
+.q-badge{display:inline-block;font-size:0.6rem;letter-spacing:0.1em;padding:2px 7px;border-radius:1px;font-weight:600;text-transform:uppercase;}
+.q-e{background:rgba(16,185,129,0.15);color:#6ee7b7;}
+.q-g{background:rgba(196,97,77,0.15);color:#f4a68a;}
+.q-f{background:rgba(245,158,11,0.15);color:#fde68a;}
+.q-l{background:rgba(239,68,68,0.15);color:#fca5a5;}
+
+/* ─── FINDINGS (light) ────────────────────────────────── */
+#findings{background:var(--light);}
+#findings .s-tag{color:var(--burg);}
+#findings .s-title{color:var(--text-l);}
+.find-grid{display:grid;grid-template-columns:1fr 1fr;gap:3rem;margin-top:3.5rem;}
+.find-card{border:1px solid var(--line-l);padding:2.5rem;background:rgba(255,255,255,0.5);}
+.find-card h3{font-family:var(--serif);font-size:1.3rem;font-weight:400;color:var(--text-l);margin-bottom:0.6rem;}
+.find-card p{font-size:0.85rem;color:var(--muted-l);line-height:1.8;}
+.chart-box{border:1px solid var(--line-l);padding:2rem;background:rgba(255,255,255,0.5);margin-top:2rem;}
+.chart-label{font-size:0.62rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted-l);margin-bottom:1.25rem;font-weight:600;}
+.chart-note{font-size:0.73rem;color:var(--muted-l);margin-top:1rem;line-height:1.6;font-style:italic;}
+
+/* ─── DISCRIMINATION / AUDIT (wine dark) ─────────────── */
+#discrimination{background:var(--wine2);}
+#discrimination .s-tag{color:var(--burg2);}
+#discrimination .s-title{color:var(--cream);}
+.disc-intro{display:grid;grid-template-columns:1fr 1fr;gap:5rem;margin-bottom:3.5rem;align-items:start;}
+.legal-box{border:1px solid rgba(196,97,77,0.3);padding:2rem;background:rgba(196,97,77,0.06);}
+.legal-box h4{font-family:var(--serif);font-size:1.1rem;font-weight:400;color:var(--burg2);margin-bottom:0.75rem;}
+.legal-box p{font-size:0.83rem;color:var(--muted-d);line-height:1.8;}
+
+/* significance vs magnitude */
+.sigmag{border:1px solid var(--line-d);margin:0 0 4rem;background:rgba(255,255,255,0.02);}
+.sigmag .sm-intro{padding:1.5rem 1.75rem;border-bottom:1px solid var(--line-d);font-size:0.85rem;color:var(--muted-d);line-height:1.75;}
+.sigmag .sm-intro strong{color:var(--cream);font-weight:500;}
+.sm-row{display:grid;grid-template-columns:1.3fr 1fr 1.3fr;gap:1.25rem;padding:1.1rem 1.75rem;border-bottom:1px solid rgba(255,255,255,0.06);align-items:start;}
+.sm-row.head{font-size:0.58rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted-d);font-weight:600;background:rgba(255,255,255,0.03);}
+.sm-row:last-child{border-bottom:none;}
+.sm-name{font-size:0.85rem;color:var(--cream);}
+.sm-sig{font-size:0.8rem;color:#f4a68a;line-height:1.5;}
+.sm-mag{font-size:0.8rem;color:var(--muted-d);line-height:1.5;}
+.sm-mag strong{color:var(--cream);font-weight:500;}
+
+.finding-block{border-top:1px solid var(--line-d);padding:3rem 0;}
+.finding-block:last-child{border-bottom:1px solid var(--line-d);}
+.finding-header{display:grid;grid-template-columns:auto 1fr auto;align-items:start;gap:2rem;margin-bottom:1.25rem;}
+.f-num{font-family:var(--serif);font-size:3rem;font-weight:300;color:rgba(255,255,255,0.08);line-height:1;flex-shrink:0;}
+.f-body h3{font-family:var(--serif);font-size:1.4rem;font-weight:400;color:var(--cream);margin-bottom:0.4rem;}
+.f-body p{font-size:0.85rem;color:var(--muted-d);line-height:1.8;}
+.f-body .lead-plain{color:var(--cream);font-weight:400;}
+.pstat{font-size:0.7rem;letter-spacing:0.06em;color:var(--burg2);background:rgba(196,97,77,0.12);border:1px solid rgba(196,97,77,0.25);padding:4px 10px;border-radius:1px;white-space:nowrap;font-weight:500;}
+.plain-stat{font-size:0.8rem;color:var(--muted-d);margin:0.5rem 0 1.5rem;font-style:italic;line-height:1.6;}
+.plain-stat b{color:#f4a68a;font-style:normal;font-weight:500;}
+.f-charts{display:grid;grid-template-columns:1fr 1fr;gap:2rem;}
+.f-chart-box{border:1px solid var(--line-d);padding:1.75rem;background:rgba(255,255,255,0.03);}
+.gap-callout{display:inline-flex;align-items:baseline;gap:0.6rem;margin-top:1rem;padding:0.5rem 0.9rem;border:1px solid rgba(196,97,77,0.3);background:rgba(196,97,77,0.06);border-radius:2px;}
+.gap-callout .gv{font-family:var(--serif);font-size:1.2rem;color:var(--burg2);}
+.gap-callout .gl{font-size:0.62rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted-d);}
+details.expand summary{cursor:pointer;font-size:0.8rem;color:rgba(255,255,255,0.45);letter-spacing:0.05em;padding:0.75rem 0;list-style:none;display:flex;align-items:center;gap:0.6rem;border-top:1px solid var(--line-d);margin-top:1.25rem;}
+details.expand summary::-webkit-details-marker{display:none;}
+details.expand summary::before{content:"+";font-size:1rem;}
+details.expand[open] summary::before{content:"\2212";}
+details.expand .inner{font-size:0.8rem;color:var(--muted-d);line-height:1.85;padding:1rem 0;}
+
+/* ─── DEAL RISK (wine) ────────────────────────────────── */
+#dealrisk{background:var(--wine);color:var(--text-d);}
+#dealrisk .s-tag{color:var(--burg2);}
+#dealrisk .s-title{color:var(--cream);}
+#dealrisk .s-desc{color:var(--muted-d);}
+.deal-grid{display:grid;grid-template-columns:1fr 1fr;gap:4rem;margin-top:3.5rem;align-items:start;}
+.exp-stack{}
+.exp-cap{font-size:0.62rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--burg2);font-weight:600;margin-bottom:1rem;display:block;}
+.exp-row{display:grid;grid-template-columns:1fr auto;gap:1.25rem;padding:1.15rem 0;border-top:1px solid var(--line-d);align-items:baseline;}
+.exp-row:last-child{border-bottom:1px solid var(--line-d);}
+.exp-row .en{font-size:0.9rem;color:var(--cream);}
+.exp-row .ed{font-size:0.74rem;color:var(--muted-d);display:block;margin-top:0.25rem;line-height:1.55;}
+.exp-row .ev{font-family:var(--serif);font-size:1.3rem;color:var(--burg2);white-space:nowrap;text-align:right;}
+.exp-row .ev small{display:block;font-family:var(--sans);font-size:0.58rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted-d);margin-top:0.2rem;}
+.exp-foot{font-size:0.76rem;color:var(--muted-d);line-height:1.7;margin-top:1.25rem;font-style:italic;}
+.hm-wrap{border:1px solid var(--line-d);padding:1.75rem;background:rgba(255,255,255,0.03);}
+.hm-wrap svg{width:100%;height:auto;display:block;}
+.hm-cap{font-size:0.8rem;color:var(--muted-d);line-height:1.75;margin-top:1.25rem;}
+.hm-cap strong{color:var(--cream);font-weight:500;}
+
+/* ─── CALCULATOR (light) ──────────────────────────────── */
+#calculator{background:var(--light);}
+#calculator .s-tag{color:var(--burg);}
+#calculator .s-title{color:var(--text-l);}
+.calc-wrap{display:grid;grid-template-columns:1fr 1fr;gap:4rem;margin-top:3.5rem;align-items:start;}
+.calc-field{margin-bottom:2rem;}
+.calc-field label{display:block;font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted-l);margin-bottom:0.75rem;font-weight:600;}
+.calc-field select{width:100%;background:transparent;border:none;border-bottom:1px solid var(--line-l);color:var(--text-l);font-family:var(--serif);font-size:1.1rem;padding:0.6rem 0;cursor:pointer;appearance:none;outline:none;}
+.range-wrap{display:flex;align-items:center;gap:1rem;}
+.calc-field input[type=range]{flex:1;background:transparent;cursor:pointer;height:1px;appearance:none;-webkit-appearance:none;}
+input[type=range]::-webkit-slider-runnable-track{height:1px;background:var(--line-l);}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;background:var(--burg);border-radius:50%;margin-top:-6.5px;}
+input[type=range]::-moz-range-track{height:1px;background:var(--line-l);}
+input[type=range]::-moz-range-thumb{width:14px;height:14px;background:var(--burg);border:none;border-radius:50%;}
+.range-val{font-family:var(--serif);font-size:1rem;color:var(--burg);min-width:70px;text-align:right;}
+.calc-result-panel{border:1px solid var(--line-l);padding:3.5rem;background:rgba(255,255,255,0.6);position:sticky;top:80px;}
+.calc-label-sm{font-size:0.62rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--muted-l);margin-bottom:1.5rem;display:block;font-weight:600;}
+.calc-value{font-family:var(--serif);font-size:4.5rem;font-weight:300;color:var(--burg);line-height:1;letter-spacing:-0.03em;margin-bottom:0.75rem;}
+.calc-seg-name{font-size:0.8rem;color:var(--muted-l);margin-bottom:2rem;padding-bottom:2rem;border-bottom:1px solid var(--line-l);}
+.calc-note{font-size:0.78rem;color:var(--muted-l);line-height:1.7;}
+.calc-note strong{color:var(--burg);font-weight:600;}
+.calc-disclaimer{font-size:0.73rem;color:var(--muted-l);line-height:1.65;margin-top:1.25rem;padding-top:1.25rem;border-top:1px solid var(--line-l);font-style:italic;}
+.tool-label{font-family:var(--serif);font-size:1.2rem;color:var(--burg);font-weight:500;margin:0 0 1.5rem;padding-bottom:0.6rem;border-bottom:1px solid var(--line-l);}
+.tool-desc{font-size:0.88rem;color:var(--muted-l);line-height:1.75;max-width:640px;margin:-0.5rem 0 2rem;}
+.na-tag{display:none;font-size:0.52rem;letter-spacing:0.1em;color:var(--burg);border:1px solid rgba(139,44,62,0.35);padding:1px 6px;border-radius:2px;margin-left:0.5rem;vertical-align:middle;text-transform:uppercase;font-weight:600;}
+.calc-field.inactive{opacity:0.4;}
+.calc-field.inactive .na-tag{display:inline-block;}
+.field-hint{font-size:0.7rem;color:var(--muted-l);margin-top:0.5rem;line-height:1.5;min-height:1rem;}
+.range-val-inline{font-family:var(--serif);font-size:1rem;color:var(--burg);float:right;}
+.demo-wrap{display:grid;grid-template-columns:1fr 1fr;gap:4rem;margin-top:2rem;align-items:start;}
+.demo-row{display:flex;justify-content:space-between;gap:1rem;padding:0.7rem 0;border-bottom:1px solid var(--line-l);font-size:0.82rem;color:var(--muted-l);}
+.demo-row span:last-child{color:var(--text-l);font-weight:500;text-align:right;white-space:nowrap;}
+
+/* ─── RECOMMENDATIONS (wine) ──────────────────────────── */
+#recommendations{background:var(--wine);}
+#recommendations .s-tag{color:var(--burg2);}
+#recommendations .s-title{color:var(--cream);}
+.rec-intro{display:grid;grid-template-columns:1fr 1fr;gap:5rem;margin-bottom:3rem;align-items:end;}
+.rec-intro .s-desc{color:var(--muted-d);}
+.reco-banner{border:1px solid rgba(196,97,77,0.4);background:rgba(196,97,77,0.08);padding:2rem 2.25rem;margin-bottom:3.5rem;}
+.reco-banner .rb-l{font-size:0.6rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--burg2);font-weight:600;}
+.reco-banner h3{font-family:var(--serif);font-size:1.7rem;color:var(--cream);font-weight:400;margin:0.4rem 0 1.5rem;line-height:1.2;}
+.reco-conds{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;}
+.reco-cond{border-left:2px solid var(--burg2);padding-left:1rem;}
+.reco-cond .cn{font-size:0.62rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--burg2);font-weight:600;}
+.reco-cond p{font-size:0.82rem;color:var(--muted-d);line-height:1.6;margin-top:0.35rem;}
+.rec-row{display:grid;grid-template-columns:70px 1fr auto;gap:2.5rem;align-items:start;padding:2.25rem 0;border-top:1px solid var(--line-d);}
+.rec-row:last-child{border-bottom:1px solid var(--line-d);}
+.rec-row-num{font-family:var(--serif);font-size:3.5rem;font-weight:300;color:rgba(255,255,255,0.07);line-height:1;}
+.rec-row-body h3{font-family:var(--serif);font-size:1.25rem;font-weight:400;color:var(--cream);margin-bottom:0.4rem;}
+.rec-row-body p{font-size:0.83rem;color:var(--muted-d);line-height:1.75;}
+.rec-meta{font-size:0.73rem;color:rgba(245,240,235,0.5);margin-top:0.7rem;letter-spacing:0.01em;line-height:1.6;}
+.rec-meta b{color:var(--burg2);font-weight:600;}
+.rec-tag{font-size:0.6rem;letter-spacing:0.15em;text-transform:uppercase;padding:4px 10px;border-radius:1px;font-weight:600;white-space:nowrap;}
+.rec-tag.imm{background:rgba(196,97,77,0.2);color:var(--burg2);border:1px solid rgba(196,97,77,0.3);}
+.rec-tag.near{background:rgba(245,158,11,0.1);color:#fcd34d;border:1px solid rgba(245,158,11,0.2);}
+.rec-tag.long{background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.4);border:1px solid var(--line-d);}
+
+/* ─── ETHICS (light) ──────────────────────────────────── */
+#ethics{background:var(--light);}
+#ethics .s-tag{color:var(--burg);}
+#ethics .s-title{color:var(--text-l);}
+.ethics-intro{display:grid;grid-template-columns:1fr 1fr;gap:5rem;margin-bottom:4rem;}
+.ethics-intro .s-desc{color:var(--muted-l);}
+.eth-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border:1px solid var(--line-l);margin-bottom:3rem;}
+.eth-card{padding:2.5rem 2rem;border-right:1px solid var(--line-l);background:rgba(255,255,255,0.4);}
+.eth-card:last-child{border-right:none;}
+.eth-card:nth-child(n+4){border-top:1px solid var(--line-l);}
+.eth-num{font-family:var(--serif);font-size:0.65rem;letter-spacing:0.2em;color:var(--burg);margin-bottom:1.25rem;font-weight:600;text-transform:uppercase;}
+.eth-card h3{font-family:var(--serif);font-size:1.1rem;font-weight:400;color:var(--text-l);margin-bottom:0.6rem;}
+.eth-card p{font-size:0.81rem;color:var(--muted-l);line-height:1.8;}
+.caveat-box{border:1px solid rgba(139,44,62,0.2);padding:2.5rem;background:rgba(139,44,62,0.04);}
+.caveat-box p{font-size:0.88rem;color:var(--muted-l);line-height:1.9;}
+.caveat-box strong{color:var(--burg);font-weight:600;}
+
+/* ─── FOOTER ──────────────────────────────────────────── */
+footer{background:var(--wine2);color:var(--muted-d);padding:3rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1.5rem;border-top:1px solid var(--line-d);}
+.footer-brand{font-family:var(--serif);font-size:1.5rem;font-weight:300;color:var(--cream);}
+.footer-group{font-size:0.62rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--burg2);font-weight:600;}
+.footer-meta{font-size:0.74rem;text-align:right;line-height:1.7;}
+
+/* ─── CHART CANVAS ────────────────────────────────────── */
+canvas{max-height:260px;}
+
+/* ─── RESPONSIVE ──────────────────────────────────────── */
+@media(max-width:768px){
+  nav{padding:0 1.25rem;}
+  .nav-links{display:none;}
+  .container{padding:0 1.5rem;}
+  .hero-inner{padding:0 1.5rem;}
+  .exec-grid,.mission-grid,.algo-header,.seg-grid,.disc-intro,.find-grid,
+  .calc-wrap,.rec-intro,.ethics-intro,.f-charts,.discoveries,.eth-grid,
+  .deal-grid,.claim-grid,.reco-conds,.demo-wrap{grid-template-columns:1fr;}
+  .reco-conds{gap:1.25rem;}
+  .discoveries{border:none;}
+  .disc{border:1px solid var(--line-d);border-bottom:none;padding:2rem 1.5rem;}
+  .disc:last-child{border-bottom:1px solid var(--line-d);}
+  .eth-grid{border:none;}
+  .eth-card{border:1px solid var(--line-l);border-bottom:none;}
+  .eth-card:last-child{border-bottom:1px solid var(--line-l);}
+  .sm-row{grid-template-columns:1fr;gap:0.35rem;}
+  .sm-row.head{display:none;}
+  .sm-name{color:var(--cream);font-weight:500;}
+  .rec-row{grid-template-columns:46px 1fr;gap:1rem;}
+  .rec-tag{grid-column:2;justify-self:start;margin-top:0.5rem;}
+  section{padding:5rem 0;}
+  .hero-title{font-size:3rem;}
+  .s-title{font-size:2.2rem;}
+}
+</style>
+</head>
+<body>
+
+<div id="progress"></div>
+
+<!-- NAV -->
+<nav>
+  <div>
+    <div class="nav-brand">siren capital — board report</div>
+    <div class="nav-group">Group 007</div>
+  </div>
+  <div class="nav-links">
+    <a href="#summary">Summary</a>
+    <a href="#mission">Context</a>
+    <a href="#algorithm">Model</a>
+    <a href="#findings">Drivers</a>
+    <a href="#discrimination">Audit</a>
+    <a href="#dealrisk">Deal Risk</a>
+    <a href="#calculator">Simulator</a>
+    <a href="#recommendations">Actions</a>
+    <a href="#ethics">Ethics</a>
+  </div>
+</nav>
+
+<!-- ═══ HERO ══════════════════════════════════════════════════════════════ -->
+<section id="hero">
+  <div class="hero-bg-text">007</div>
+  <div class="hero-inner">
+    <div class="hero-eyebrow">
+      <div class="hero-tag">Group 007</div>
+      <div class="hero-line"></div>
+      <div class="hero-tag">Confidential · Pre-Close Intelligence</div>
+    </div>
+    <h1 class="hero-title">
+      We opened<br>
+      the <em>black box.</em><br>
+      <strong>Here's what the<br>
+      board needs to see.</strong>
+    </h1>
+    <p class="hero-sub">
+      Before this acquisition closes, the board should understand how Siren Capital's algorithm actually
+      values loan calls — and what patterns sit inside it. We rebuilt the bank's valuation engine to within
+      <strong>3.2% of the true value on average</strong> (graded at 96.84%), and found small but statistically
+      unmistakable differences in outcomes by race and gender. The amounts per borrower are modest; the deal and
+      regulatory risk they create is not.
+    </p>
+    <div class="hero-stats">
+      <div class="h-stat">
+        <div class="num count-up" data-target="231276">0</div>
+        <div class="lbl">Calls Analyzed</div>
+      </div>
+      <div class="h-stat">
+        <div class="num">96.84<span>%</span></div>
+        <div class="lbl">Replication Accuracy</div>
+      </div>
+      <div class="h-stat">
+        <div class="num">$71</div>
+        <div class="lbl">Mean Absolute Error</div>
+      </div>
+      <div class="h-stat">
+        <div class="num">5</div>
+        <div class="lbl">Fairness Flags</div>
+      </div>
+    </div>
+  </div>
+  <div class="scroll-hint">
+    <div class="scroll-arrow"></div>
+    Scroll
+  </div>
+</section>
+
+<!-- ═══ EXECUTIVE BRIEFING ════════════════════════════════════════════════ -->
+<section id="summary">
+  <div class="container">
+    <div class="reveal">
+      <span class="s-tag">— Executive Briefing</span>
+      <h2 class="s-title">The bottom line,<br><em>before you scroll.</em></h2>
+    </div>
+
+    <div class="exec-grid">
+      <div class="reveal">
+        <p class="exec-lead">We were asked to do two things before this deal closes: <strong>replicate</strong> Siren Capital's
+        undisclosed loan-valuation algorithm, and <strong>audit</strong> it for fairness. We did both.</p>
+        <ul class="exec-find">
+          <li><span class="efn">1</span><span>We rebuilt the black-box pricing model to <strong>96.84% accuracy</strong> (average error ~$71 on a ~$2,233 call). The logic is now transparent and explainable.</span></li>
+          <li><span class="efn">2</span><span>Most demographic gaps (rate, value) are real but tiny. Compulsory insurance is the exception — and it runs on <strong>two protected characteristics</strong>: every <strong>foreign-born</strong> borrower is forced onto it (100% vs 15%), and among native-born, <strong>Black</strong> borrowers get it 4× as often as everyone else (40% vs 10%). Neither is explained by credit score.</span></li>
+          <li><span class="efn">3</span><span>The risk to this deal is <strong>not</strong> the ~$104K/year of measurable overcharging. It is the regulatory, legal and reputational exposure that a systematic protected-class pattern creates under ECOA — regardless of size or intent.</span></li>
+        </ul>
+        <div class="reco-pill">
+          <span class="rl">Our recommendation to the board</span>
+          <div class="rt">Proceed — but conditionally.</div>
+          <p>Do not walk, and do not sign as-is. Close only with (a) a pre-close fair-lending legal opinion, (b) reps, warranties, indemnity and an escrow covering fair-lending exposure, and (c) a remediation-and-monitoring plan as a condition of closing. Detail in the Action Plan.</p>
+        </div>
+      </div>
+
+      <div class="reveal">
+        <div class="storyboard">
+          <div class="sb-head">How to read this report — 7 chapters</div>
+          <a class="sb-item" href="#mission"><span class="sb-rn">I</span><span class="sb-body"><span class="tt">Context</span><br><span class="ds">Why an algorithmic audit, and why now.</span></span></a>
+          <a class="sb-item" href="#algorithm"><span class="sb-rn">II</span><span class="sb-body"><span class="tt">The Model</span><br><span class="ds">How we cracked the black box to 96.84%.</span></span></a>
+          <a class="sb-item" href="#findings"><span class="sb-rn">III</span><span class="sb-body"><span class="tt">What It Values</span><br><span class="ds">The real drivers of a call's worth.</span></span></a>
+          <a class="sb-item" href="#discrimination"><span class="sb-rn">IV</span><span class="sb-body"><span class="tt">Fairness Audit</span><br><span class="ds">Four flags — significance vs. magnitude.</span></span></a>
+          <a class="sb-item" href="#dealrisk"><span class="sb-rn">V</span><span class="sb-body"><span class="tt">Deal Risk</span><br><span class="ds">What it means in money and exposure.</span></span></a>
+          <a class="sb-item" href="#calculator"><span class="sb-rn">VI</span><span class="sb-body"><span class="tt">Simulator</span><br><span class="ds">A what-if tool for the valuation logic.</span></span></a>
+          <a class="sb-item" href="#recommendations"><span class="sb-rn">VII</span><span class="sb-body"><span class="tt">Action Plan + Ethics</span><br><span class="ds">Prioritized actions and our obligations.</span></span></a>
+        </div>
+      </div>
+    </div>
+
+    <div class="claim-grid reveal">
+      <div class="claim can">
+        <h4>What this analysis can claim</h4>
+        <ul>
+          <li>Accurately replicate how the bank prices loan calls, segment by segment.</li>
+          <li>Detect statistically robust, unadjusted differences in outcomes by race and gender.</li>
+          <li>Show the compulsory-insurance gap is not explained by credit score — it holds in every credit band.</li>
+          <li>Quantify the one cost effect with a direct dollar value — the gender rate gap.</li>
+          <li>Flag where the board faces fair-lending and deal risk.</li>
+        </ul>
+      </div>
+      <div class="claim cannot">
+        <h4>What it cannot claim — yet</h4>
+        <ul>
+          <li>That the disparities are intentional, or unlawful — that is a legal determination.</li>
+          <li>That they survive controls for credit risk (credit score, DTI) absent from the ledger.</li>
+          <li>Causation. These are correlations from observational data, not a controlled experiment.</li>
+          <li>A verdict. Confirming or clearing the bank needs a controlled audit on full credit data.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ CONTEXT ═══════════════════════════════════════════════════════════ -->
+<section id="mission">
+  <div class="container">
+    <div class="reveal" style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:2rem;margin-bottom:1rem;">
+      <div>
+        <span class="s-tag">— I. Context</span>
+        <h2 class="s-title">Why we're<br>here.</h2>
+      </div>
+      <p class="s-desc" style="max-width:420px;">
+        The acquisition of Siren Capital triggered an independent algorithmic audit. We were tasked with replicating the bank's valuation model — and in doing so, surfaced patterns the board should weigh before signing.
+      </p>
+    </div>
+
+    <div class="mission-grid">
+      <div class="mission-steps reveal">
+        <div class="m-step">
+          <div class="m-step-num">I</div>
+          <div class="m-step-body">
+            <h3>The Acquisition</h3>
+            <p>Global Bank is acquiring Siren Capital. The crown jewel: the Master Call Ledger — 231,276 customer interactions with valuations generated by a proprietary algorithm the bank has never fully disclosed.</p>
+          </div>
+        </div>
+        <div class="m-step">
+          <div class="m-step-num">II</div>
+          <div class="m-step-body">
+            <h3>The Mandate</h3>
+            <p>Independently replicate the bank's valuation model, value 25,698 new calls, and conduct a fairness audit — before the deal closes.</p>
+          </div>
+        </div>
+        <div class="m-step">
+          <div class="m-step-num">III</div>
+          <div class="m-step-body">
+            <h3>The Discovery</h3>
+            <p>We achieved 96.84% accuracy — close enough to decode the algorithm's logic. In doing so, we found that race and gender are statistically significant predictors of outcomes, in ways that warrant a closer, controlled look.</p>
+          </div>
+        </div>
+        <div class="m-step">
+          <div class="m-step-num">IV</div>
+          <div class="m-step-body">
+            <h3>This Report</h3>
+            <p>What follows is our board intelligence package: how the algorithm works, what the data shows, what it does and does not prove, and what we recommend the board do — now.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="mission-aside reveal">
+        <div class="big-stat count-up" data-target="231276">0</div>
+        <p>calls analyzed across 89 variables — borrower demographics, loan terms, repayment history, and the bank's proprietary VALUE score.</p>
+        <hr class="thin light">
+        <p style="font-family:var(--serif);font-size:1.4rem;font-weight:300;color:var(--text-l);line-height:1.5;margin:1.5rem 0;">
+          "The algorithm is supposed to be purely financial. The data suggests it's worth checking."
+        </p>
+        <hr class="thin light">
+        <div class="alert-box warn">
+          <h4>Pre-Closing Legal Risk</h4>
+          <p>If the algorithm encodes discriminatory patterns, the acquirer can inherit liability under ECOA and the Fair Housing Act. This board must decide — before signing — whether to proceed, renegotiate, or require remediation.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ ALGORITHM ══════════════════════════════════════════════════════════ -->
+<section id="algorithm">
+  <div class="container">
+    <div class="algo-header reveal">
+      <div>
+        <span class="s-tag">— II. The Model</span>
+        <h2 class="s-title">How we cracked<br><em>the code.</em></h2>
+      </div>
+      <p class="s-desc" style="padding-top:1rem;">
+        The bank's proprietary system, treated as a black box, was opened with six per-segment, MAE-optimized gradient-boosted models trained on 231,276 historical calls — reproducing its outputs to within ~3.2% on average (graded 96.84%).
+      </p>
+    </div>
+
+    <!-- THREE KEY DISCOVERIES -->
+    <div class="discoveries reveal">
+      <div class="disc">
+        <div class="disc-num">44%</div>
+        <h3>Rejected Calls — Fixed Value</h3>
+        <p>Nearly half of all calls result in loan rejections. The algorithm assigns these a near-fixed value regardless of borrower profile.</p>
+        <code class="formula">NO_REPAYMENT &rarr; VALUE &asymp; $54.74</code>
+      </div>
+      <div class="disc">
+        <div class="disc-num" style="font-size:1.4rem;padding-top:0.8rem;">r = 0.996</div>
+        <h3>Closed Loans — Near-Perfect Formula</h3>
+        <p>For the 8.3% of calls where the loan is fully repaid, the bank uses a near-deterministic formula with correlation 0.996.</p>
+        <code class="formula">VALUE &asymp; 0.998 &times; Total_Paid + $88.63</code>
+      </div>
+      <div class="disc">
+        <div class="disc-num" style="font-size:1.4rem;padding-top:0.8rem;">$327&rarr;$138</div>
+        <h3>Active Loans — Ratio Targets</h3>
+        <p>The breakthrough: predict VALUE &divide; a financial base, then multiply back — and train each model to minimize dollar error directly. On-time error fell from $327 to $138.</p>
+        <code class="formula">VALUE = model(features) &times; base</code>
+      </div>
+    </div>
+
+    <!-- METHODOLOGY CALLOUT -->
+    <div class="reveal" style="border:1px solid var(--line-d);background:rgba(255,255,255,0.03);padding:1.75rem 2rem;margin-bottom:3rem;">
+      <p style="font-size:0.88rem;color:var(--muted-d);line-height:1.8;">
+        <strong style="color:var(--cream);font-weight:500;">The model in one line:</strong> a separate specialist model for each of the six loan statuses, each a gradient-boosted tree ensemble tuned to minimise <em>average dollar error</em> — not statistical fit — and predicting the ratio of value to a financial base. We route each segment to its strongest model and average across random seeds for stability.
+      </p>
+    </div>
+
+    <!-- SEGMENT TABLE + CHART -->
+    <div class="seg-grid reveal">
+      <div>
+        <span class="s-tag" style="color:var(--burg2);">Prediction accuracy by segment</span>
+        <table class="seg-table">
+          <thead>
+            <tr><th>Segment</th><th>MAE</th><th>Error share</th><th style="text-align:right">Quality</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Not accepted</td><td>$13</td><td>8%</td><td><span class="q-badge q-e">Excellent</span></td></tr>
+            <tr><td>Loan closed</td><td>$42</td><td>5%</td><td><span class="q-badge q-e">Excellent</span></td></tr>
+            <tr><td>Charged off</td><td>$64</td><td>3%</td><td><span class="q-badge q-g">Good</span></td></tr>
+            <tr><td>On-time (active)</td><td>$118</td><td>66%</td><td><span class="q-badge q-f">The wall</span></td></tr>
+            <tr><td>Delinquent (30/60-day)</td><td>$228</td><td>19%</td><td><span class="q-badge q-l">Limited</span></td></tr>
+            <tr class="total"><td>Overall</td><td>$71</td><td>100%</td><td><span class="q-badge q-e">96.84%</span></td></tr>
+          </tbody>
+        </table>
+        <p style="font-size:0.75rem;color:var(--muted-d);margin-top:1.25rem;line-height:1.75;">
+          Rejections, closed and charged-off loans are essentially solved. The on-time (active) and delinquent segments carry ~85% of all remaining error — delinquent loans (VALUE range &minus;$31,982 to +$68,527) need external credit-bureau data the bank uses but does not share.
+        </p>
+        <details class="expand">
+          <summary>What "96.84% accuracy" means — precisely</summary>
+          <div class="inner">The score is <b>normalized mean absolute error</b>: 1 &minus; (MAE &divide; mean call value) = 1 &minus; (&asymp;$70.5 &divide; &asymp;$2,233) = <b>96.84%</b> on the 25,698 valued calls. In plain terms: our prediction lands, on average, within ~3.2% of the bank's true value. It is <em>not</em> classification accuracy and <em>not</em> R&sup2;. A key early lesson: optimizing for statistical fit (R&sup2;) actually scored worse (~90%) because it mispriced the extreme tails — so we rebuilt every model to minimize dollar error directly. Our cross-validation now tracks the live graded score to within ~0.02%.</div>
+        </details>
+      </div>
+      <div>
+        <span class="s-tag" style="color:var(--burg2);margin-bottom:1.25rem;display:block;">Call volume by loan status (n = 25,684)</span>
+        <div style="border:1px solid var(--line-d);padding:1.75rem;background:rgba(255,255,255,0.03);">
+          <canvas id="segPie" role="img" aria-label="Doughnut chart of call volume by loan status: not accepted 11,239, on-time active 10,140, loan closed 2,136, delinquent 1,419, charged off 750."></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- ERROR CONTRIBUTION -->
+    <div class="reveal" style="border:1px solid var(--line-d);padding:2rem;background:rgba(255,255,255,0.03);margin-top:2.5rem;">
+      <div class="chart-label" style="color:var(--muted-d);">Where the $71 of average error comes from ($ contribution by segment)</div>
+      <canvas id="errorContribChart" role="img" aria-label="Horizontal bar chart: on-time active loans contribute $46.6 to the overall $71 mean error, delinquent $13.5, not accepted $5.6, loan closed $3.5, charged off $1.8."></canvas>
+      <p style="font-size:0.73rem;color:var(--muted-d);margin-top:1rem;line-height:1.6;font-style:italic;">Two-thirds of all remaining error sits in the on-time active-loan segment — the model's known frontier and the focus of further work.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FINDINGS / DRIVERS ═════════════════════════════════════════════════ -->
+<section id="findings">
+  <div class="container">
+    <div class="reveal" style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:2rem;margin-bottom:3.5rem;">
+      <div>
+        <span class="s-tag">— III. What It Values</span>
+        <h2 class="s-title">What the algorithm<br><em>actually values.</em></h2>
+      </div>
+      <p class="s-desc">
+        By reverse-engineering 231,276 calls, we identified the true drivers of VALUE — and what they reveal about how the bank prices a loan.
+      </p>
+    </div>
+
+    <div class="find-grid reveal">
+      <div class="find-card">
+        <h3>Repayment History Dominates</h3>
+        <p>The single most important signal is how much has already been repaid relative to the loan amount. Repayment ratio alone explains roughly 40% of VALUE variance in active loans — the bank is pricing expected future cash flows.</p>
+      </div>
+      <div class="find-card">
+        <h3>Outstanding Balance Sets the Floor</h3>
+        <p>For on-time loans, VALUE is tightly bound to outstanding principal. The bank effectively prices the expected value of remaining repayments — discounted at an implicit rate we estimate at 14–16%.</p>
+      </div>
+      <div class="find-card">
+        <h3>Payment Status Is the Master Key</h3>
+        <p>The most powerful single predictor is repayment status. It splits calls into populations whose VALUE ranges differ by orders of magnitude — from ~$55 for rejections to ~$68K for high-value performing loans.</p>
+      </div>
+      <div class="find-card">
+        <h3>What's Missing — External Data</h3>
+        <p>The bank's model clearly draws on credit-bureau recovery rates and market-risk factors absent from the call ledger. This explains the remaining ~3.2% accuracy gap — and, plausibly, much of the demographic variation we observe.</p>
+      </div>
+    </div>
+
+    <div class="chart-box reveal">
+      <div class="chart-label">Top value drivers — relative feature importance</div>
+      <canvas id="featureChart" role="img" aria-label="Horizontal bar chart of relative feature importance: repayment ratio is most important at 100, followed by total paid, outstanding principal, payment completion, and others."></canvas>
+      <p class="chart-note">Importance is shown on a relative 0–100 scale (top driver = 100), derived from the active-loan models. It ranks drivers; it is not a percentage of VALUE.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ DISCRIMINATION / AUDIT ════════════════════════════════════════════ -->
+<section id="discrimination">
+  <div class="container">
+    <div class="disc-intro reveal">
+      <div>
+        <span class="s-tag">— IV. Fairness Audit</span>
+        <h2 class="s-title">The fairness<br><em>findings.</em></h2>
+      </div>
+      <div>
+        <div class="legal-box">
+          <h4>Why small differences still matter here</h4>
+          <p>Under ECOA (15 U.S.C. § 1691), it is unlawful to let race, color, sex or national origin affect credit outcomes — and <strong style="color:var(--cream);font-weight:500;">intent is not required</strong>. A neutral-looking model can still create unlawful <em>disparate impact</em>. That makes even small, systematic differences a compliance question, not just an economic one. The tests below are <strong style="color:var(--cream);font-weight:500;">unadjusted</strong> — they do not yet control for credit risk — so they show where to look, not a final verdict.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- SIGNIFICANCE VS MAGNITUDE -->
+    <div class="sigmag reveal">
+      <div class="sm-intro">
+        <strong>Read significance and magnitude separately.</strong> With 200,000+ records, even microscopic
+        differences register as "highly significant." Significance tells us a pattern is <em>real, not noise</em>;
+        magnitude tells us <em>how much it matters</em>. Most gaps below are real but small — with one striking
+        exception: the compulsory-insurance disparity, which is both highly significant <em>and</em> large.
+      </div>
+      <div class="sm-row head">
+        <div>Finding</div><div>Statistical significance</div><div>Real-world magnitude</div>
+      </div>
+      <div class="sm-row">
+        <div class="sm-name" style="color:var(--burg2);">★ Race &rarr; compulsory insurance</div>
+        <div class="sm-sig">&chi;&sup2; = 8,489 · z = 92 · p &lt; 10&#8315;&#179;&#8304;&#8304;</div>
+        <div class="sm-mag"><strong>Black 48.0% vs White 21.8%</strong> — 2.2&times; as often, a 26 pp gap that <strong>holds in every credit-score band</strong>. Large <em>and</em> robust — the headline finding.</div>
+      </div>
+      <div class="sm-row">
+        <div class="sm-name">Race &rarr; call VALUE</div>
+        <div class="sm-sig">p &asymp; 9&times;10&#8315;&#185;&#8313; — &lt; 1 in a billion billion</div>
+        <div class="sm-mag"><strong>$172 per call</strong> unadjusted gap (~7.6%). But VALUE is the bank's internal asset valuation, partly driven by repayment behaviour — not a price the borrower pays.</div>
+      </div>
+      <div class="sm-row">
+        <div class="sm-name">Race &rarr; loan acceptance</div>
+        <div class="sm-sig">p &asymp; 4&times;10&#8315;&#178;&#8311;</div>
+        <div class="sm-mag"><strong>3.4 pp spread</strong> (54.8%–58.2%). Passes the 4/5ths rule at 94.1% — no presumptive violation, but significant enough to review.</div>
+      </div>
+      <div class="sm-row">
+        <div class="sm-name">Race &rarr; interest rate</div>
+        <div class="sm-sig">p &asymp; 9&times;10&#8315;&#8308;</div>
+        <div class="sm-mag"><strong>0.17 pp</strong> highest-to-lowest. On a $1,900 loan, ~$3 a year. Real pattern, trivial amount.</div>
+      </div>
+      <div class="sm-row">
+        <div class="sm-name">Gender &rarr; interest rate</div>
+        <div class="sm-sig">p = 0.003</div>
+        <div class="sm-mag"><strong>0.083 pp</strong> (women higher) &asymp; <strong>~$1.60 per borrower / year</strong>; ~$104K across 65,922 accepted women. The clearest protected-class channel — and the smallest.</div>
+      </div>
+    </div>
+
+    <!-- LEAD FINDING: COMPULSORY INSURANCE -->
+    <div class="finding-block reveal" style="border-top:2px solid var(--burg2);background:rgba(196,97,77,0.05);padding:2.5rem 1.5rem;">
+      <div class="finding-header">
+        <div class="f-num" style="color:var(--burg2);opacity:0.85;">★</div>
+        <div class="f-body">
+          <span style="font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--burg2);font-weight:600;">The headline · tested from a team hypothesis</span>
+          <h3 style="margin-top:0.4rem;">The disparity that matters: compulsory insurance</h3>
+          <p class="lead-plain">The demographic gap is not in the loan amount, and barely in the interest rate. It is in who gets <em>compulsory insurance</em> attached to their loan. Black-alone borrowers receive it <strong style="color:var(--burg2);">2.2× as often as White-alone borrowers</strong> — and the gap does not move when we compare people with identical credit scores.</p>
+        </div>
+        <div class="pstat">z = 92 · p &lt; 10&#8315;&#179;&#8304;&#8304;</div>
+      </div>
+      <p class="plain-stat">Loan amounts are essentially equal across races (a 2.6% spread). Insurance is not: <b>White 21.8% · SOR 26.7% · Asian 27.2% · Black 48.0%</b>. Mean credit scores are near-identical (696–699), and the ~26 pp Black–White gap persists in <b>every credit-score quintile</b> — so creditworthiness does not explain it.</p>
+      <div class="f-charts">
+        <div class="f-chart-box">
+          <div class="chart-label">Compulsory-insurance rate by race (%)</div>
+          <canvas id="insuranceRaceChart" role="img" aria-label="Bar chart: compulsory insurance rate by race — White 21.8%, Some Other Race 26.7%, Asian 27.2%, Black 48.0%."></canvas>
+        </div>
+        <div class="f-chart-box">
+          <div class="chart-label">…and it holds at every credit-score level</div>
+          <canvas id="insuranceControlChart" role="img" aria-label="Line chart: insurance rate by credit-score quintile for each race. Black sits near 48% across all five quintiles; White near 22%; Asian and Some Other Race near 26-28%."></canvas>
+          <p class="chart-note">If insurance were risk-based, these lines would slope with credit score. They are flat — the gap is by race, not risk.</p>
+        </div>
+      </div>
+      <details class="expand">
+        <summary>Why this is the strongest finding — and what it means</summary>
+        <div class="inner">Unlike the rate and VALUE gaps (real but tiny), this effect is <b>large, adverse and robust</b>. Compulsory insurance is an added cost and condition imposed on the borrower. Black-alone applicants carry it 2.2× as often (48.0% vs 21.8%) — a 26 pp gap that is stable across all five credit-score quintiles, and credit scores are near-identical across groups. Notably, for Black borrowers the rate <b>rises from 36.8% at the initial offer to 48.0% in the final terms</b> — insurance is added during finalisation — while it is unchanged for every other group. This is the clearest disparate-impact signal in the data and the one we would lead with. We have since traced the mechanism (next): it runs on national origin and, separately, race — surviving controls for credit score, nativity and geography. It remains observational, but the obvious legitimate explanations are already ruled out.</div>
+      </details>
+    </div>
+
+    <!-- MECHANISM: TWO PROTECTED DIMENSIONS -->
+    <div class="finding-block reveal">
+      <div class="finding-header">
+        <div class="f-num" style="color:var(--burg2);opacity:0.85;">&rarr;</div>
+        <div class="f-body">
+          <span style="font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--burg2);font-weight:600;">The mechanism · how insurance is assigned</span>
+          <h3 style="margin-top:0.4rem;">Two protected dimensions, not one</h3>
+          <p class="lead-plain">We traced the rule. Compulsory insurance is assigned on <strong style="color:var(--burg2);">two protected characteristics at once</strong> — national origin, and, separately, race.</p>
+        </div>
+      </div>
+      <div class="f-charts">
+        <div class="f-chart-box">
+          <div class="chart-label">Mechanism 1 — national origin</div>
+          <canvas id="insuranceNativChart" role="img" aria-label="Bar chart: 100% of foreign-born borrowers receive compulsory insurance versus 15.3% of native-born."></canvas>
+          <p class="chart-note">Every foreign-born borrower (100%) is placed on compulsory insurance, vs 15% of native-born. National origin is itself protected under ECOA.</p>
+        </div>
+        <div class="f-chart-box">
+          <div class="chart-label">Mechanism 2 — race, among native-born only</div>
+          <canvas id="insuranceNativeRaceChart" role="img" aria-label="Bar chart: among native-born borrowers insurance is 10% for White, Some Other Race and Asian, but 40.1% for Black."></canvas>
+          <p class="chart-note">Holding nativity constant, only Black native-born borrowers are singled out — 4× every other native-born group.</p>
+        </div>
+      </div>
+      <p class="plain-stat">Foreign-born share is <b>identical for Black and White</b> borrowers (13.1%), so nativity explains <b>0%</b> of the race gap. The Black effect survives controls for <b>both nativity and credit score</b> — a direct race pattern, not a proxy. That leaves the board with <b>two separate ECOA exposures</b>: national origin and race.</p>
+    </div>
+
+    <!-- FINDING 1 -->
+    <div class="finding-block reveal">
+      <div class="finding-header">
+        <div class="f-num">01</div>
+        <div class="f-body">
+          <h3>Race tracks call VALUE</h3>
+          <p class="lead-plain">Average VALUE differs across racial groups by more than chance would produce.</p>
+        </div>
+        <div class="pstat">F = 29.06 · p = 8.97&times;10&#8315;&#185;&#8313;</div>
+      </div>
+      <p class="plain-stat">A difference this large would arise by chance <b>less than once in a billion-billion samples</b> — so the pattern is real. <b>But VALUE is the bank's own valuation of the loan, not the borrower's cost</b>, and it legitimately reflects repayment behaviour. Treat this as a flag for a controlled review, not as evidence of pricing bias.</p>
+      <div class="f-charts">
+        <div class="f-chart-box">
+          <div class="chart-label">Average VALUE by race ($)</div>
+          <canvas id="raceValueChart" role="img" aria-label="Bar chart: average call VALUE by race. White-alone is lowest at about $2,172; Black-alone highest at about $2,343."></canvas>
+          <p class="chart-note">Axis starts at $0 — the visible step is the true ~7.6% gap.</p>
+        </div>
+        <div class="f-chart-box">
+          <div style="padding-top:1rem;">
+            <p style="font-family:var(--serif);font-size:1.5rem;font-weight:300;color:var(--cream);line-height:1.4;margin-bottom:1rem;">"White-alone calls carry the lowest average VALUE — an unmistakable statistical pattern, but one we cannot yet attribute to race."</p>
+            <p style="font-size:0.8rem;color:var(--muted-d);line-height:1.8;">
+              The unadjusted gap between highest and lowest group is <span style="color:var(--burg2);">$171.88</span> per call. Median loan size is ~$1,900 across all groups, so loan size is not the driver — but credit risk, geography and sector remain uncontrolled.
+            </p>
+          </div>
+        </div>
+      </div>
+      <details class="expand">
+        <summary>Technical methodology</summary>
+        <div class="inner">One-way ANOVA across four primary racial groups (n = 204,807 calls): F(3, 204803) = 29.06, p = 8.97&times;10&#8315;&#185;&#8313;. The gap is driven by lower average values for White-alone borrowers relative to Black, Asian, and Some-Other-Race groups. Loan-amount medians are ~$1,900 across all groups, ruling out loan size as a confound — but the test is univariate. Because VALUE is partly a function of realized repayment, the disparity may reflect differences in loan performance and could also encode information through proxies (geography, employment sector, credit score). A multivariate model controlling for credit risk is required to separate these explanations.</div>
+      </details>
+    </div>
+
+    <!-- FINDING 2 -->
+    <div class="finding-block reveal">
+      <div class="finding-header">
+        <div class="f-num">02</div>
+        <div class="f-body">
+          <h3>Race tracks loan acceptance</h3>
+          <p class="lead-plain">Approval rates differ by race — but the spread stays within the legal safe-harbour.</p>
+        </div>
+        <div class="pstat">&chi;&sup2; = 133.63 · p = 4.03&times;10&#8315;&#178;&#8311;</div>
+      </div>
+      <p class="plain-stat">The 3.4 pp spread is highly significant, yet the ratio of lowest to highest acceptance is <b>94.1%</b> — comfortably above the regulators' 4/5ths (80%) threshold. <b>No presumptive violation</b>, but the consistency of the gap still warrants review.</p>
+      <div class="f-charts">
+        <div class="f-chart-box">
+          <div class="chart-label">Acceptance rate by race (%)</div>
+          <canvas id="raceAccChart" role="img" aria-label="Bar chart: acceptance rate by race ranges from 54.8% (White alone) to 58.2% (Some Other Race), all far above the 46.5% four-fifths floor."></canvas>
+        </div>
+        <div class="f-chart-box">
+          <div class="chart-label">4/5ths (disparate impact) rule</div>
+          <div style="padding-top:0.5rem;">
+            <div style="display:flex;justify-content:space-between;padding:0.7rem 0;border-bottom:1px solid var(--line-d);font-size:0.8rem;"><span style="color:var(--muted-d);">Some Other Race (highest)</span><span style="color:var(--cream);">58.17%</span></div>
+            <div style="display:flex;justify-content:space-between;padding:0.7rem 0;border-bottom:1px solid var(--line-d);font-size:0.8rem;"><span style="color:var(--muted-d);">Asian alone</span><span style="color:var(--cream);">57.52%</span></div>
+            <div style="display:flex;justify-content:space-between;padding:0.7rem 0;border-bottom:1px solid var(--line-d);font-size:0.8rem;"><span style="color:var(--muted-d);">Black alone</span><span style="color:var(--cream);">56.82%</span></div>
+            <div style="display:flex;justify-content:space-between;padding:0.7rem 0;border-bottom:1px solid var(--line-d);font-size:0.8rem;"><span style="color:var(--muted-d);">White alone (lowest)</span><span style="color:var(--cream);">54.75%</span></div>
+            <div style="display:flex;justify-content:space-between;padding:0.7rem 0;font-size:0.8rem;"><span style="color:var(--muted-d);">4/5ths ratio (54.75 &divide; 58.17)</span><span style="color:#6ee7b7;">94.1% — above 80%</span></div>
+            <p style="font-size:0.75rem;color:var(--muted-d);margin-top:0.75rem;line-height:1.75;">No 4/5ths violation. We flag it for monitoring because the gap is systematic, not because it breaches the safe-harbour.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FINDING 3 -->
+    <div class="finding-block reveal">
+      <div class="finding-header">
+        <div class="f-num">03</div>
+        <div class="f-body">
+          <h3>Race tracks interest rate (accepted borrowers)</h3>
+          <p class="lead-plain">A real but tiny rate gap by race — about three dollars a year on a typical loan.</p>
+        </div>
+        <div class="pstat">F = 5.46 · p = 9.45&times;10&#8315;&#8308;</div>
+      </div>
+      <p class="plain-stat">White applicants pay the highest average rate (14.95%), Some-Other-Race the lowest (14.77%) — a <b>0.17 pp</b> spread. Statistically significant; economically negligible per borrower. We have not controlled for risk, so we say it is <b>not yet explained</b> by observed factors — not that no explanation exists.</p>
+      <div class="f-charts">
+        <div class="f-chart-box">
+          <div class="chart-label">Average interest rate by race — accepted (%)</div>
+          <canvas id="raceRateChart" role="img" aria-label="Bar chart: average interest rate by race, from 14.77% to 14.95%, a gap of 0.17 percentage points. Vertical axis is zoomed."></canvas>
+          <p class="chart-note">Axis zoomed to 14.6–15.0% to make a 0.17 pp gap visible.</p>
+        </div>
+        <div class="f-chart-box" style="display:flex;flex-direction:column;justify-content:center;">
+          <p style="font-family:var(--serif);font-size:1.4rem;font-weight:300;color:var(--cream);line-height:1.5;">
+            "A 0.17 percentage-point gap, systematically distributed by race — small, but not yet explained by any risk factor we can see in the ledger."
+          </p>
+          <div class="gap-callout"><span class="gv">0.17 pp</span><span class="gl">&asymp; ~$3 / borrower / year</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FINDING 4 -->
+    <div class="finding-block reveal">
+      <div class="finding-header">
+        <div class="f-num">04</div>
+        <div class="f-body">
+          <h3>Gender tracks interest rate</h3>
+          <p class="lead-plain">Women are charged very slightly more — the clearest protected-class signal, and the smallest in dollars.</p>
+        </div>
+        <div class="pstat">t = &minus;2.97 · p = 0.0030</div>
+      </div>
+      <p class="plain-stat">Women average <b>0.083 pp</b> higher than men (14.949% vs 14.866%). That is roughly <b>$1.60 per affected borrower per year</b>, or about <b>$104K</b> across all 65,922 accepted female borrowers. The pattern is statistically clear; the per-person amount is a rounding error.</p>
+      <div class="f-charts">
+        <div class="f-chart-box">
+          <div class="chart-label">Average interest rate by sex — accepted (%)</div>
+          <canvas id="sexRateChart" role="img" aria-label="Bar chart: men average 14.866% and women 14.949%, a gap of 0.083 percentage points. Vertical axis is zoomed."></canvas>
+          <p class="chart-note">Axis zoomed to 14.7–15.0% to make a 0.083 pp gap visible.</p>
+        </div>
+        <div class="f-chart-box">
+          <div class="chart-label">Practical impact (illustrative)</div>
+          <div style="padding-top:0.5rem;">
+            <div style="display:flex;justify-content:space-between;padding:0.7rem 0;border-bottom:1px solid var(--line-d);font-size:0.8rem;"><span style="color:var(--muted-d);">Rate gap (female vs male)</span><span style="color:var(--burg2);">+0.083 pp</span></div>
+            <div style="display:flex;justify-content:space-between;padding:0.7rem 0;border-bottom:1px solid var(--line-d);font-size:0.8rem;"><span style="color:var(--muted-d);">Accepted female borrowers</span><span style="color:var(--cream);">65,922</span></div>
+            <div style="display:flex;justify-content:space-between;padding:0.7rem 0;border-bottom:1px solid var(--line-d);font-size:0.8rem;"><span style="color:var(--muted-d);">Median loan amount</span><span style="color:var(--cream);">$1,900</span></div>
+            <div style="display:flex;justify-content:space-between;padding:0.7rem 0;border-bottom:1px solid var(--line-d);font-size:0.8rem;"><span style="color:var(--muted-d);">Per borrower / year</span><span style="color:var(--cream);">~$1.60</span></div>
+            <div style="display:flex;justify-content:space-between;padding:0.7rem 0;font-size:0.8rem;"><span style="color:var(--muted-d);">Aggregate / year</span><span style="color:var(--burg2);">~$104,000</span></div>
+            <p style="font-size:0.75rem;color:var(--muted-d);margin-top:0.75rem;line-height:1.75;">Order-of-magnitude, assuming the gap applies to one year of the median balance. The point is the <em>pattern</em>, not the dollar total.</p>
+          </div>
+        </div>
+      </div>
+      <details class="expand">
+        <summary>How a model with no "race" or "gender" field can still produce these gaps</summary>
+        <div class="inner">None of these protected attributes appear in Siren Capital's disclosed model features. Differences can still arise because seemingly neutral variables act as <em>proxies</em>: zip code correlates with race; some credit-history variables can carry the legacy of historical redlining; employment sector correlates with gender. A model that never "sees" race can therefore still reproduce racial patterns through correlated inputs (the omitted-variable / proxy problem). This is exactly why disparate-impact law does not require intent — and why the fix is a controlled audit of which inputs carry protected information, not an assumption of bad faith.</div>
+      </details>
+    </div>
+
+    <details class="expand" style="margin-top:2.5rem;">
+      <summary>What we would check next — to confirm or clear each flag</summary>
+      <div class="inner">
+        1 — A controlled, multivariate analysis that holds credit risk (credit score, debt-to-income, geography) constant. This is the single most important next step before any conclusion.<br><br>
+        2 — TESTED ✓ Confirmed and traced. The disparity is in <strong style="color:var(--cream);font-weight:500;">compulsory insurance</strong>, not the loan amount, and runs on two protected dimensions — national origin (100% of foreign-born) and race (native-born Black 4×). It survives credit-score, nativity and geography controls (see the headline finding). Remaining: loan-purpose and property-value checks would only further isolate it.<br><br>
+        3 — Robustness to multiple-comparison corrections and to alternative model specifications.<br><br>
+        4 — Whether the race–VALUE gap survives once realized repayment behaviour is controlled for, given that VALUE is partly a function of repayment.
+      </div>
+    </details>
+  </div>
+</section>
+
+<!-- ═══ DEAL RISK & EXPOSURE ══════════════════════════════════════════════ -->
+<section id="dealrisk">
+  <div class="container">
+    <div class="reveal" style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:2rem;margin-bottom:1rem;">
+      <div>
+        <span class="s-tag">— V. Deal Risk</span>
+        <h2 class="s-title">What it means<br><em>for the deal.</em></h2>
+      </div>
+      <p class="s-desc">
+        Translate the statistics into the only language the deal cares about: money and risk. The headline number is small. The tail it opens is not.
+      </p>
+    </div>
+
+    <div class="deal-grid">
+      <div class="exp-stack reveal">
+        <span class="exp-cap">Exposure stack — what's actually at stake</span>
+        <div class="exp-row">
+          <div><span class="en">Measured direct overcharge</span><span class="ed">The gender rate gap — the one effect we can price precisely from the data.</span></div>
+          <div class="ev">~$104K<small>per year</small></div>
+        </div>
+        <div class="exp-row">
+          <div><span class="en">Borrower remediation</span><span class="ed">Refunds if a multi-year look-back is applied across affected borrowers.</span></div>
+          <div class="ev">low single-digit $M<small>illustrative</small></div>
+        </div>
+        <div class="exp-row">
+          <div><span class="en">Regulatory, legal & monitoring</span><span class="ed">CFPB / DOJ inquiry, legal defence, consent-order monitoring, model overhaul.</span></div>
+          <div class="ev">uncertain<small>potentially material</small></div>
+        </div>
+        <div class="exp-row">
+          <div><span class="en">Reputational & deal-timing</span><span class="ed">Headlines, franchise value, delay or re-pricing of the transaction.</span></div>
+          <div class="ev">hard to price<small>often the largest</small></div>
+        </div>
+        <p class="exp-foot">Only the first line is computed from the data. The rest are directional, order-of-magnitude ranges to frame the board's judgement — not estimates of liability.</p>
+      </div>
+
+      <div class="reveal">
+        <div class="hm-wrap">
+          <div class="chart-label" style="color:var(--muted-d);">Risk matrix — likelihood × impact</div>
+          <svg viewBox="0 0 470 380" role="img" aria-label="Risk matrix plotting likelihood against impact. Direct customer overcharge sits high-likelihood, low-impact. Regulatory and reputational risks sit high-impact, medium-likelihood.">
+            <defs>
+              <linearGradient id="riskgrad" x1="0" y1="1" x2="1" y2="0">
+                <stop offset="0%" stop-color="#3f7a5a" stop-opacity="0.12"/>
+                <stop offset="50%" stop-color="#c4614d" stop-opacity="0.10"/>
+                <stop offset="100%" stop-color="#8b2c3e" stop-opacity="0.30"/>
+              </linearGradient>
+            </defs>
+            <!-- plot background -->
+            <rect x="70" y="20" width="370" height="300" fill="url(#riskgrad)" stroke="rgba(255,255,255,0.12)"/>
+            <!-- gridlines -->
+            <line x1="193.3" y1="20" x2="193.3" y2="320" stroke="rgba(255,255,255,0.08)"/>
+            <line x1="316.6" y1="20" x2="316.6" y2="320" stroke="rgba(255,255,255,0.08)"/>
+            <line x1="70" y1="120" x2="440" y2="120" stroke="rgba(255,255,255,0.08)"/>
+            <line x1="70" y1="220" x2="440" y2="220" stroke="rgba(255,255,255,0.08)"/>
+            <!-- axis labels -->
+            <text x="255" y="352" fill="#c4a8a0" font-family="Inter,sans-serif" font-size="11" letter-spacing="2" text-anchor="middle">LIKELIHOOD &rarr;</text>
+            <text x="26" y="170" fill="#c4a8a0" font-family="Inter,sans-serif" font-size="11" letter-spacing="2" text-anchor="middle" transform="rotate(-90 26 170)">IMPACT &rarr;</text>
+            <text x="131" y="336" fill="rgba(196,168,160,0.6)" font-family="Inter,sans-serif" font-size="9" text-anchor="middle">Low</text>
+            <text x="255" y="336" fill="rgba(196,168,160,0.6)" font-family="Inter,sans-serif" font-size="9" text-anchor="middle">Medium</text>
+            <text x="378" y="336" fill="rgba(196,168,160,0.6)" font-family="Inter,sans-serif" font-size="9" text-anchor="middle">High</text>
+            <!-- points -->
+            <!-- Regulatory/legal: high impact, med likelihood -->
+            <circle cx="280" cy="72" r="7" fill="#c4614d"/>
+            <text x="293" y="69" fill="#f5f0eb" font-family="Inter,sans-serif" font-size="10.5">Regulatory / legal action</text>
+            <text x="293" y="83" fill="rgba(196,168,160,0.7)" font-family="Inter,sans-serif" font-size="9">CFPB / DOJ, consent order</text>
+            <!-- Reputational: high impact, med-low likelihood -->
+            <circle cx="205" cy="105" r="7" fill="#c4614d"/>
+            <text x="218" y="102" fill="#f5f0eb" font-family="Inter,sans-serif" font-size="10.5">Reputational / deal risk</text>
+            <text x="218" y="116" fill="rgba(196,168,160,0.7)" font-family="Inter,sans-serif" font-size="9">franchise value, timing</text>
+            <!-- Acceptance disparity: med/med -->
+            <circle cx="255" cy="178" r="7" fill="#d4856a"/>
+            <text x="268" y="175" fill="#f5f0eb" font-family="Inter,sans-serif" font-size="10.5">Acceptance disparity</text>
+            <text x="268" y="189" fill="rgba(196,168,160,0.7)" font-family="Inter,sans-serif" font-size="9">3.4 pp, passes 4/5ths</text>
+            <!-- Race value/rate signals: low impact, med likelihood -->
+            <circle cx="232" cy="262" r="7" fill="#8b2c3e"/>
+            <text x="245" y="259" fill="#f5f0eb" font-family="Inter,sans-serif" font-size="10.5">Race VALUE / rate signals</text>
+            <text x="245" y="273" fill="rgba(196,168,160,0.7)" font-family="Inter,sans-serif" font-size="9">unadjusted, needs controls</text>
+            <!-- Gender overcharge: low impact, high likelihood -->
+            <circle cx="385" cy="272" r="7" fill="#8b2c3e"/>
+            <text x="375" y="294" fill="#f5f0eb" font-family="Inter,sans-serif" font-size="10.5" text-anchor="end">Gender overcharge</text>
+            <text x="375" y="307" fill="rgba(196,168,160,0.7)" font-family="Inter,sans-serif" font-size="9" text-anchor="end">~$104K/yr, clear pattern</text>
+          </svg>
+          <p class="hm-cap"><strong>The asymmetry is the point.</strong> The measured customer harm sits low-impact (bottom). The board's real exposure sits high-impact (top) — regulatory and reputational risk that a systematic protected-class pattern can trigger under disparate-impact law. The <strong>compulsory-insurance disparity</strong> (large, adverse and robust to credit score) is the single item most likely to draw a fair-lending action — it belongs top-right. <strong>Manage the tail, not the average.</strong></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ CALCULATOR / SIMULATOR ════════════════════════════════════════════ -->
+<section id="calculator">
+  <div class="container">
+    <div class="reveal" style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:2rem;margin-bottom:3.5rem;">
+      <div>
+        <span class="s-tag">— VI. Decision Tools</span>
+        <h2 class="s-title">Explore it<br><em>yourself.</em></h2>
+      </div>
+      <p class="s-desc">
+        Two interactive tools: price any loan call with the reverse-engineered model, then stress-test what a demographic shift would do to the book.
+      </p>
+    </div>
+
+    <div class="tool-label">01 · Loan call value simulator</div>
+    <div class="calc-wrap">
+      <div class="calc-controls reveal">
+        <div class="calc-field">
+          <label>Loan Status</label>
+          <select id="calcStatus">
+            <option value="rejected">Rejected — No Repayment</option>
+            <option value="closed">Loan Closed (Fully Repaid)</option>
+            <option value="on_time_small">On-Time, Small Loan (&le;$1,000)</option>
+            <option value="on_time_med" selected>On-Time, Medium Loan ($1k–$3k)</option>
+            <option value="on_time_large">On-Time, Large Loan (&gt;$3,000)</option>
+            <option value="charged_off">Charged Off</option>
+            <option value="delinquent">Delinquent (30 or 60 days)</option>
+          </select>
+        </div>
+        <div class="calc-field" id="field-loan">
+          <label>Loan Amount <span class="na-tag">not used here</span></label>
+          <div class="range-wrap">
+            <input type="range" id="loanAmt" min="1000" max="3000" value="2000" step="100"
+              oninput="document.getElementById('loanAmtVal').textContent='$'+Number(this.value).toLocaleString();calcValue()">
+            <span class="range-val" id="loanAmtVal">$2,000</span>
+          </div>
+        </div>
+        <div class="calc-field" id="field-totalpaid">
+          <label>Total Amount Paid <span class="na-tag">not used here</span></label>
+          <div class="range-wrap">
+            <input type="range" id="totalPaid" min="0" max="15000" value="1500" step="100"
+              oninput="document.getElementById('totalPaidVal').textContent='$'+Number(this.value).toLocaleString();calcValue()">
+            <span class="range-val" id="totalPaidVal">$1,500</span>
+          </div>
+        </div>
+        <div class="calc-field" id="field-outstanding">
+          <label>Outstanding Principal <span class="na-tag">not used here</span></label>
+          <div class="range-wrap">
+            <input type="range" id="outstanding" min="0" max="10000" value="800" step="100"
+              oninput="document.getElementById('outstandingVal').textContent='$'+Number(this.value).toLocaleString();calcValue()">
+            <span class="range-val" id="outstandingVal">$800</span>
+          </div>
+        </div>
+        <div class="field-hint" id="calcHint"></div>
+      </div>
+
+      <div class="calc-result-panel reveal">
+        <span class="calc-label-sm">Estimated Call VALUE</span>
+        <div class="calc-value" id="calcResult">$1,970</div>
+        <div class="calc-seg-name" id="calcSeg">On-Time Medium Loan Segment</div>
+        <p class="calc-note">
+          Based on our reverse-engineered model; the segment's average error is shown above. Overall accuracy: <strong>96.84%</strong> (graded; MAE ≈ $71 vs. mean call value ≈ $2,233).
+        </p>
+        <p class="calc-disclaimer">
+          How to read this: <em>Rejected</em> and <em>Loan Closed</em> use the bank's near-exact recovered formulas; active-loan segments use a simplified illustration of our models. Greyed-out inputs are the ones a given status doesn't depend on — that's expected, not a bug — and the Loan Amount range adapts to the selected segment.
+        </p>
+      </div>
+    </div>
+
+    <hr class="thin light" style="margin:4.5rem 0 3.5rem;">
+
+    <div class="tool-label">02 · Demographic what-if</div>
+    <p class="tool-desc">A question the team raised: if a whole demographic group left the book, what would happen to its value — and what are the economics for each group? Pick a group and an assumed share. The answer is itself one of our findings.</p>
+    <div class="demo-wrap">
+      <div class="demo-controls reveal">
+        <div class="calc-field">
+          <label>Demographic group</label>
+          <select id="demoGroup">
+            <option value="white" selected>White alone</option>
+            <option value="black">Black alone</option>
+            <option value="asian">Asian alone</option>
+            <option value="sor">Some Other Race</option>
+          </select>
+        </div>
+        <div class="calc-field">
+          <label>Assumed share of the book <span class="range-val-inline" id="demoShareVal">25%</span></label>
+          <div class="range-wrap">
+            <input type="range" id="demoShare" min="5" max="60" value="25" step="1" oninput="demoUpdate()">
+          </div>
+          <div class="field-hint">You set this — we don't have verified per-group counts, so treat the share as a what-if input.</div>
+        </div>
+        <div style="margin-top:1.5rem;">
+          <div class="demo-row"><span>Group avg call VALUE</span><span id="demoGV">$2,172</span></div>
+          <div class="demo-row"><span>vs. four-group average</span><span id="demoGVgap">−$86 (−3.8%)</span></div>
+          <div class="demo-row"><span>Acceptance rate</span><span id="demoAcc">54.8% (vs 56.8%)</span></div>
+          <div class="demo-row"><span>Avg interest rate (accepted)</span><span id="demoRate">14.95% (vs 14.86%)</span></div>
+        </div>
+      </div>
+
+      <div class="calc-result-panel reveal">
+        <span class="calc-label-sm">If this group exited the book</span>
+        <div class="calc-value" id="demoValueLoss">−24%</div>
+        <div class="calc-seg-name">of total book value lost — almost exactly the group's share of calls</div>
+        <div class="demo-row"><span>Avg value per remaining call</span><span id="demoAvgShift">+1.3%</span></div>
+        <p class="calc-note" id="demoInsight"></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ RECOMMENDATIONS / ACTION PLAN ═════════════════════════════════════ -->
+<section id="recommendations">
+  <div class="container">
+    <div class="rec-intro reveal">
+      <div>
+        <span class="s-tag">— VII. Board Action Plan</span>
+        <h2 class="s-title">What the board<br><em>must do.</em></h2>
+      </div>
+      <p class="s-desc">
+        Six prioritized actions across three horizons, each with an owner and a first step. The first two require a decision before the acquisition closes. Inaction is itself a choice — with legal consequences.
+      </p>
+    </div>
+
+    <div class="reco-banner reveal">
+      <span class="rb-l">Decision required at this board meeting</span>
+      <h3>Proceed — conditionally. Protect the downside in the deal terms.</h3>
+      <div class="reco-conds">
+        <div class="reco-cond"><div class="cn">Condition A</div><p>Pre-close fair-lending legal opinion on ECOA / disparate-impact exposure, using full credit-bureau data.</p></div>
+        <div class="reco-cond"><div class="cn">Condition B</div><p>Fair-lending reps & warranties, indemnity, and an escrow / holdback sized to the legal opinion.</p></div>
+        <div class="reco-cond"><div class="cn">Condition C</div><p>A remediation-and-monitoring plan as a closing condition, with model retraining on a defined timeline.</p></div>
+      </div>
+    </div>
+
+    <div class="rec-list reveal">
+      <div class="rec-row">
+        <div class="rec-row-num">01</div>
+        <div class="rec-row-body">
+          <h3>Commission an Independent Fair-Lending Audit</h3>
+          <p>Retain external fair-lending counsel to formally assess ECOA exposure before signing. Our statistics are a starting flag; a controlled legal-and-statistical opinion is needed before the board can be said to have discharged its fiduciary duty.</p>
+          <p class="rec-meta"><b>Owner:</b> Deal counsel + external fair-lending firm &nbsp;·&nbsp; <b>First step:</b> scope a controlled (multivariate) review on full credit data this week.</p>
+        </div>
+        <div class="rec-tag imm">Immediate</div>
+      </div>
+      <div class="rec-row">
+        <div class="rec-row-num">02</div>
+        <div class="rec-row-body">
+          <h3>Require Disclosure &amp; Indemnification in the Purchase Agreement</h3>
+          <p>Negotiate representations and warranties that Siren Capital has complied with fair-lending laws, plus indemnification and an escrow for any pre-close regulatory action arising from the patterns identified here.</p>
+          <p class="rec-meta"><b>Owner:</b> M&amp;A counsel &nbsp;·&nbsp; <b>First step:</b> add fair-lending reps, indemnity and a sized holdback to the SPA draft.</p>
+        </div>
+        <div class="rec-tag imm">Immediate</div>
+      </div>
+      <div class="rec-row">
+        <div class="rec-row-num">03</div>
+        <div class="rec-row-body">
+          <h3>Audit and Retrain the Valuation Algorithm</h3>
+          <p>Engage a model-risk team to identify which proxy variables carry race and gender information. Remove or re-weight them and revalidate for disparate impact before resuming production use.</p>
+          <p class="rec-meta"><b>Owner:</b> Model risk / data science &nbsp;·&nbsp; <b>First step:</b> run the disparity tests <em>with</em> credit-risk controls to confirm or clear each flag.</p>
+        </div>
+        <div class="rec-tag near">90 Days</div>
+      </div>
+      <div class="rec-row">
+        <div class="rec-row-num">04</div>
+        <div class="rec-row-body">
+          <h3>Remediate Affected Borrowers</h3>
+          <p>Lead with the compulsory-insurance disparity (Black borrowers 2.2× as likely, robust to credit score): review whether insurance was justified case by case, refund where it was not, and strip the race-correlated triggers. Then address the smaller gender rate gap (~65,922 women). Proactive remediation materially reduces regulatory penalties.</p>
+          <p class="rec-meta"><b>Owner:</b> Compliance + Finance &nbsp;·&nbsp; <b>First step:</b> pull the insurance-assignment logic and test it for race proxies.</p>
+        </div>
+        <div class="rec-tag near">90 Days</div>
+      </div>
+      <div class="rec-row">
+        <div class="rec-row-num">05</div>
+        <div class="rec-row-body">
+          <h3>Implement Ongoing Algorithmic Fairness Monitoring</h3>
+          <p>Establish quarterly disparate-impact testing across all protected classes, and a model-governance board with authority to halt or modify production algorithms when monitoring crosses a threshold.</p>
+          <p class="rec-meta"><b>Owner:</b> Model-governance board &nbsp;·&nbsp; <b>First step:</b> stand up quarterly testing and define trigger thresholds.</p>
+        </div>
+        <div class="rec-tag long">12 Months</div>
+      </div>
+      <div class="rec-row">
+        <div class="rec-row-num">06</div>
+        <div class="rec-row-body">
+          <h3>Leverage the Algorithm's Accuracy as an Asset</h3>
+          <p>Our 96.84% replication shows Siren's valuation methodology is highly systematic. Once remediated for fairness, it is genuine intellectual property for portfolio management and pricing — a reason this deal can still be value-creating.</p>
+          <p class="rec-meta"><b>Owner:</b> Portfolio operations &nbsp;·&nbsp; <b>First step:</b> after remediation, scope a productized pricing engine.</p>
+        </div>
+        <div class="rec-tag long">Strategic</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ ETHICS ════════════════════════════════════════════════════════════ -->
+<section id="ethics">
+  <div class="container">
+    <div class="ethics-intro reveal">
+      <div>
+        <span class="s-tag">— VIII. Ethical Framework</span>
+        <h2 class="s-title">Our commitment<br><em>to responsible analysis.</em></h2>
+      </div>
+      <p class="s-desc">
+        How we conducted this work, who is affected by what we found — and by what we recommend — and what obligations flow from it, for us and for the board.
+      </p>
+    </div>
+
+    <div class="eth-grid reveal">
+      <div class="eth-card">
+        <div class="eth-num">I — Methodology</div>
+        <h3>Methodological Integrity</h3>
+        <p>Established tests throughout: ANOVA for group VALUE differences, Chi-square for categorical associations, two-sample t-tests for continuous outcomes, with full statistics reported. Given the large sample, we report uncorrected p-values but emphasise effect sizes — and note that even under conservative multiple-comparison corrections, the race and acceptance findings remain significant.</p>
+      </div>
+      <div class="eth-card">
+        <div class="eth-num">II — Affected Parties</div>
+        <h3>Who Is Affected — by the findings</h3>
+        <p>Most directly affected: <strong>foreign-born</strong> borrowers — all 33,228 are forced onto compulsory insurance (100%) — and <strong>native-born Black</strong> borrowers, charged it 4× as often as other native-born groups; neither is explained by credit score. Both are ECOA-protected (national origin and race). More modestly, 65,922 accepted women paid ~$1.60/year more on average, and acceptance varied 3.4 pp by race. The acquirer inherits the legal, financial and reputational exposure.</p>
+      </div>
+      <div class="eth-card">
+        <div class="eth-num">III — Affected Parties</div>
+        <h3>Who Is Affected — if you act</h3>
+        <p>Acting on our recommendations helps borrowers (remediation, fairer pricing) — but has tensions to manage. Remediation and monitoring require <em>processing</em> protected-class data, which must be tightly governed. And a stricter acceptance bar applied bluntly could reduce access. Fixes must be designed, not just switched on.</p>
+      </div>
+      <div class="eth-card">
+        <div class="eth-num">IV — Data Privacy</div>
+        <h3>Privacy Protection</h3>
+        <p>All individual-level work was on aggregated outputs. No PII — names, SSNs, card numbers, IP addresses, passport numbers — was accessed or retained; PII columns were excluded at preprocessing, before any modeling. Demographic fields were used only for the fairness audit, not for prediction.</p>
+      </div>
+      <div class="eth-card">
+        <div class="eth-num">V — Dual Use & Safeguards</div>
+        <h3>Safeguards on Our Model</h3>
+        <p>The reverse-engineered model is itself a powerful artifact. We recommend it be access-controlled, <strong>not deployed for production pricing until the fairness audit clears it</strong>, kept under human oversight, and shipped with documented limitations. We disclose its accuracy and its weaknesses (e.g. delinquent loans) in full.</p>
+      </div>
+      <div class="eth-card">
+        <div class="eth-num">VI — What Fair Means</div>
+        <h3>There Is No Single "Fair"</h3>
+        <p>Fairness has competing, mathematically incompatible definitions — demographic parity, equal opportunity, and calibration cannot all hold at once when base rates differ. The board must <em>choose</em> a standard. We recommend: equal treatment conditional on legitimate risk factors, backed by ongoing disparate-impact monitoring — and we name the trade-off rather than hide it.</p>
+      </div>
+    </div>
+
+    <div class="caveat-box reveal">
+      <p><strong>A note on the limits of this analysis —</strong> Our findings come from observational data and univariate tests. We cannot rule out that the disparities are explained by legitimate credit-risk factors absent from the call ledger (credit scores, debt-to-income, etc.), and we do not claim to have proven discrimination. What we can say is that the patterns are statistically robust and systematic along protected lines. <strong>Given what is at stake in this transaction, the prudent commercial posture is to require Siren Capital to evidence a risk-based justification as a condition of closing — rather than for the board to assume innocence — and to confirm or clear each flag with a controlled audit on complete credit data.</strong></p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div>
+    <div class="footer-brand">siren capital</div>
+    <div class="footer-group">Group 007 · Board Intelligence Report</div>
+  </div>
+  <div class="footer-meta">
+    <div>231,276 training calls · 25,698 calls valued &amp; graded at 96.84%</div>
+    <div>Accuracy 96.84% = 1 − (MAE ≈ $70.5 ÷ mean call value ≈ $2,233) — normalized MAE</div>
+    <div>Methods: ANOVA, Chi-square, two-sample t-tests (unadjusted) · effect sizes reported · controlled audit recommended</div>
+    <div style="margin-top:0.5rem;color:rgba(196,168,160,0.5);font-size:0.68rem;">Confidential — prepared for internal board use only</div>
+  </div>
+</footer>
+
+<script>
+document.documentElement.classList.add('js');
+
+// ─── SCROLL PROGRESS ───────────────────────────────────────────────────────
+(function(){
+  const pb=document.getElementById('progress');
+  const upd=()=>{const h=document.documentElement;const max=h.scrollHeight-h.clientHeight;
+    pb.style.width=(max>0?(h.scrollTop/max*100):0)+'%';};
+  addEventListener('scroll',upd,{passive:true});upd();
+})();
+
+// ─── REVEAL ON SCROLL ──────────────────────────────────────────────────────
+(function(){
+  const rObs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');rObs.unobserve(e.target);}});},{threshold:0.1});
+  document.querySelectorAll('.reveal').forEach(el=>rObs.observe(el));
+})();
+
+// ─── COUNTER ANIMATION ─────────────────────────────────────────────────────
+function animateCount(el, target, duration=2000) {
+  const start = Date.now();
+  const step = () => {
+    const p = Math.min((Date.now()-start)/duration,1);
+    const e = 1-Math.pow(1-p,4);
+    el.textContent = Math.round(e*target).toLocaleString();
+    if(p<1) requestAnimationFrame(step);
+  };
+  requestAnimationFrame(step);
+}
+const obs = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting && e.target.dataset.target){
+      animateCount(e.target,+e.target.dataset.target);
+      obs.unobserve(e.target);
+    }
+  });
+},{threshold:0.3});
+document.querySelectorAll('.count-up').forEach(el=>obs.observe(el));
+
+// ─── CHART DEFAULTS ────────────────────────────────────────────────────────
+const WINE_BG = '#3a0c1f';
+const BURG = '#8b2c3e';
+const BURG2 = '#c4614d';
+const CREAM = '#f5f0eb';
+const MUTED = '#c4a8a0';
+const INK  = '#1e1810';
+
+Chart.defaults.font.family = "'Inter', sans-serif";
+Chart.defaults.color = MUTED;
+
+// value-label plugin (handles vertical & horizontal bars; skips line datasets)
+const valueLabels = {
+  id:'valueLabels',
+  afterDatasetsDraw(chart, args, opts){
+    const ctx = chart.ctx;
+    const horiz = chart.options.indexAxis === 'y';
+    chart.data.datasets.forEach((ds, di)=>{
+      const meta = chart.getDatasetMeta(di);
+      if((ds.type && ds.type!=='bar') || (meta.type && meta.type!=='bar')) return;
+      const fmt = (opts && opts.fmt) ? opts.fmt : (v=>v);
+      const col = (opts && opts.color) ? opts.color : CREAM;
+      meta.data.forEach((el, i)=>{
+        const v = ds.data[i];
+        if(v==null) return;
+        ctx.save();
+        ctx.fillStyle = col;
+        ctx.font = "600 11px 'Inter', sans-serif";
+        if(horiz){ ctx.textAlign='left'; ctx.textBaseline='middle'; ctx.fillText(fmt(v), el.x+6, el.y); }
+        else { ctx.textAlign='center'; ctx.textBaseline='bottom'; ctx.fillText(fmt(v), el.x, el.y-5); }
+        ctx.restore();
+      });
+    });
+  }
+};
+Chart.register(valueLabels);
+
+// ─── SEGMENT DOUGHNUT ──────────────────────────────────────────────────────
+new Chart(document.getElementById('segPie'),{
+  type:'doughnut',
+  data:{
+    labels:['Not accepted','On-time (active)','Loan closed','Delinquent','Charged off'],
+    datasets:[{
+      data:[11239,10140,2136,1419,750],
+      backgroundColor:['#4a1028','#8b2c3e','#c4614d','#d4856a','#bba89a'],
+      borderWidth:2,borderColor:WINE_BG
+    }]
+  },
+  options:{
+    responsive:true,maintainAspectRatio:true,
+    plugins:{
+      valueLabels:false,
+      legend:{position:'right',labels:{font:{size:11,family:"'Inter',sans-serif"},padding:10,boxWidth:12,color:MUTED}},
+      tooltip:{callbacks:{label:c=>{const t=c.dataset.data.reduce((a,b)=>a+b,0);return ` ${c.parsed.toLocaleString()} (${(c.parsed/t*100).toFixed(1)}%)`;},titleFont:{size:12}}}
+    }
+  }
+});
+
+// ─── ERROR CONTRIBUTION BY SEGMENT ─────────────────────────────────────────
+new Chart(document.getElementById('errorContribChart'),{
+  type:'bar',
+  data:{
+    labels:['On-time (active)','Delinquent','Not accepted','Loan closed','Charged off'],
+    datasets:[{data:[46.6,13.5,5.6,3.5,1.8],backgroundColor:['#8b2c3e','#c4614d','#d4856a','#bba89a','#a09090'],borderWidth:0}]
+  },
+  options:{
+    indexAxis:'y',responsive:true,maintainAspectRatio:true,
+    layout:{padding:{right:40}},
+    plugins:{legend:{display:false},valueLabels:{color:CREAM,fmt:v=>'$'+v.toFixed(1)}},
+    scales:{
+      x:{beginAtZero:true,max:54,ticks:{callback:v=>'$'+v,color:MUTED,font:{family:"'Inter',sans-serif",size:10}},grid:{color:'rgba(255,255,255,0.06)'},border:{display:false}},
+      y:{grid:{display:false},ticks:{color:MUTED,font:{family:"'Inter',sans-serif",size:10}}}
+    }
+  }
+});
+
+// ─── FEATURE IMPORTANCE ────────────────────────────────────────────────────
+new Chart(document.getElementById('featureChart'),{
+  type:'bar',
+  data:{
+    labels:['Repayment Ratio','Total Paid','Outstanding Principal','Payment Completion','Net Repayment','Loan × Rate','Monthly Payment','Loan Amount','Fee Ratio','Client Earnings'],
+    datasets:[{
+      label:'Relative Importance',
+      data:[100,87,75,68,62,55,48,41,33,27],
+      backgroundColor:BURG,borderRadius:0,borderWidth:0
+    }]
+  },
+  options:{
+    indexAxis:'y',responsive:true,maintainAspectRatio:true,
+    layout:{padding:{right:28}},
+    plugins:{legend:{display:false},valueLabels:{color:INK,fmt:v=>v}},
+    scales:{
+      x:{beginAtZero:true,max:112,ticks:{callback:v=>v,color:'#6b5c56',font:{family:"'Inter',sans-serif",size:10}},grid:{color:'rgba(30,24,16,0.08)'},border:{display:false}},
+      y:{grid:{display:false},ticks:{color:'#6b5c56',font:{family:"'Inter',sans-serif",size:10}}}
+    }
+  }
+});
+
+// ─── RACE VALUE (axis from 0 — honest) ──────────────────────────────────────
+new Chart(document.getElementById('raceValueChart'),{
+  type:'bar',
+  data:{
+    labels:['White alone','Black alone','Asian alone','Some Other Race'],
+    datasets:[{
+      label:'Average VALUE ($)',
+      data:[2171.56,2343.44,2302.87,2314.50],
+      backgroundColor:['#4a1028','#8b2c3e','#c4614d','#d4856a'],
+      borderRadius:0,borderWidth:0
+    }]
+  },
+  options:{
+    responsive:true,maintainAspectRatio:true,
+    layout:{padding:{top:18}},
+    plugins:{legend:{display:false},valueLabels:{color:CREAM,fmt:v=>'$'+Math.round(v).toLocaleString()}},
+    scales:{
+      y:{beginAtZero:true,max:2600,ticks:{callback:v=>'$'+v.toLocaleString(),color:MUTED,font:{family:"'Inter',sans-serif",size:10}},grid:{color:'rgba(255,255,255,0.06)'},border:{display:false}},
+      x:{grid:{display:false},ticks:{color:MUTED,font:{family:"'Inter',sans-serif",size:10}}}
+    }
+  }
+});
+
+// ─── RACE ACCEPTANCE (axis from 0 — honest) ─────────────────────────────────
+new Chart(document.getElementById('raceAccChart'),{
+  type:'bar',
+  data:{
+    labels:['Some Other Race','Asian alone','Black alone','White alone'],
+    datasets:[{
+      label:'Acceptance Rate (%)',
+      data:[58.17,57.52,56.82,54.75],
+      backgroundColor:['#d4856a','#c4614d','#8b2c3e','#4a1028'],
+      borderRadius:0,borderWidth:0,order:2
+    },{
+      label:'4/5ths floor (46.5%)',
+      data:[46.54,46.54,46.54,46.54],
+      type:'line',borderColor:'rgba(110,231,183,0.55)',borderDash:[4,3],
+      borderWidth:1.5,pointRadius:0,fill:false,order:1
+    }]
+  },
+  options:{
+    responsive:true,maintainAspectRatio:true,
+    layout:{padding:{top:18}},
+    plugins:{legend:{position:'top',labels:{color:MUTED,font:{family:"'Inter',sans-serif",size:10},boxWidth:12,padding:10}},valueLabels:{color:CREAM,fmt:v=>v.toFixed(1)+'%'}},
+    scales:{
+      y:{beginAtZero:true,max:70,ticks:{callback:v=>v+'%',color:MUTED,font:{family:"'Inter',sans-serif",size:10}},grid:{color:'rgba(255,255,255,0.06)'},border:{display:false}},
+      x:{grid:{display:false},ticks:{color:MUTED,font:{family:"'Inter',sans-serif",size:10}}}
+    }
+  }
+});
+
+// ─── RACE INTEREST RATE (zoomed, disclosed) ─────────────────────────────────
+new Chart(document.getElementById('raceRateChart'),{
+  type:'bar',
+  data:{
+    labels:['Some Other Race','Asian alone','Black alone','White alone'],
+    datasets:[{
+      label:'Interest Rate (%)',
+      data:[14.774,14.811,14.895,14.948],
+      backgroundColor:['#d4856a','#c4614d','#8b2c3e','#4a1028'],
+      borderRadius:0,borderWidth:0
+    }]
+  },
+  options:{
+    responsive:true,maintainAspectRatio:true,
+    layout:{padding:{top:18}},
+    plugins:{legend:{display:false},valueLabels:{color:CREAM,fmt:v=>v.toFixed(2)+'%'}},
+    scales:{
+      y:{min:14.6,max:15.0,ticks:{callback:v=>v.toFixed(2)+'%',color:MUTED,font:{family:"'Inter',sans-serif",size:10}},grid:{color:'rgba(255,255,255,0.06)'},border:{display:false}},
+      x:{grid:{display:false},ticks:{color:MUTED,font:{family:"'Inter',sans-serif",size:10}}}
+    }
+  }
+});
+
+// ─── SEX RATE (zoomed, disclosed) ───────────────────────────────────────────
+new Chart(document.getElementById('sexRateChart'),{
+  type:'bar',
+  data:{
+    labels:['Male (n=62,857)','Female (n=65,922)'],
+    datasets:[{
+      label:'Interest Rate (%)',
+      data:[14.866,14.949],
+      backgroundColor:['#4a1028','#c4614d'],
+      borderRadius:0,borderWidth:0,barThickness:60
+    }]
+  },
+  options:{
+    responsive:true,maintainAspectRatio:true,
+    layout:{padding:{top:18}},
+    plugins:{legend:{display:false},valueLabels:{color:CREAM,fmt:v=>v.toFixed(3)+'%'}},
+    scales:{
+      y:{min:14.7,max:15.0,ticks:{callback:v=>v.toFixed(3)+'%',color:MUTED,font:{family:"'Inter',sans-serif",size:10}},grid:{color:'rgba(255,255,255,0.06)'},border:{display:false}},
+      x:{grid:{display:false},ticks:{color:MUTED,font:{family:"'Inter',sans-serif",size:10}}}
+    }
+  }
+});
+
+// ─── INSURANCE BY RACE ─────────────────────────────────────────────────────
+new Chart(document.getElementById('insuranceRaceChart'),{
+  type:'bar',
+  data:{
+    labels:['White alone','Some Other Race','Asian alone','Black alone'],
+    datasets:[{data:[21.8,26.7,27.2,48.0],backgroundColor:['#4a1028','#7a2336','#8b2c3e','#c4614d'],borderWidth:0}]
+  },
+  options:{
+    responsive:true,maintainAspectRatio:true,layout:{padding:{top:18}},
+    plugins:{legend:{display:false},valueLabels:{color:CREAM,fmt:v=>v.toFixed(1)+'%'}},
+    scales:{
+      y:{beginAtZero:true,max:55,ticks:{callback:v=>v+'%',color:MUTED,font:{family:"'Inter',sans-serif",size:10}},grid:{color:'rgba(255,255,255,0.06)'},border:{display:false}},
+      x:{grid:{display:false},ticks:{color:MUTED,font:{family:"'Inter',sans-serif",size:10}}}
+    }
+  }
+});
+
+// ─── INSURANCE CONTROLLED FOR CREDIT SCORE ─────────────────────────────────
+new Chart(document.getElementById('insuranceControlChart'),{
+  type:'line',
+  data:{
+    labels:['Q1 low','Q2','Q3','Q4','Q5 high'],
+    datasets:[
+      {label:'Black alone',     data:[47.4,49.0,47.1,48.1,48.3], borderColor:'#c4614d', backgroundColor:'#c4614d', borderWidth:2.5, tension:0.2, pointRadius:3},
+      {label:'Asian alone',     data:[25.0,26.1,28.5,27.8,28.6], borderColor:'#8b2c3e', backgroundColor:'#8b2c3e', borderWidth:1.5, tension:0.2, pointRadius:2},
+      {label:'Some Other Race', data:[25.3,28.0,26.2,26.7,27.7], borderColor:'#bba89a', backgroundColor:'#bba89a', borderWidth:1.5, tension:0.2, pointRadius:2},
+      {label:'White alone',     data:[21.7,21.7,21.7,22.0,21.8], borderColor:'#c4a8a0', backgroundColor:'#c4a8a0', borderWidth:1.5, borderDash:[4,3], tension:0.2, pointRadius:2}
+    ]
+  },
+  options:{
+    responsive:true,maintainAspectRatio:true,
+    plugins:{valueLabels:false,legend:{position:'top',labels:{color:MUTED,font:{family:"'Inter',sans-serif",size:9},boxWidth:10,padding:8}}},
+    scales:{
+      y:{beginAtZero:true,max:60,ticks:{callback:v=>v+'%',color:MUTED,font:{family:"'Inter',sans-serif",size:10}},grid:{color:'rgba(255,255,255,0.06)'},border:{display:false}},
+      x:{grid:{display:false},ticks:{color:MUTED,font:{family:"'Inter',sans-serif",size:10}}}
+    }
+  }
+});
+
+// ─── INSURANCE BY NATIVITY (mechanism 1) ──────────────────────────────────
+new Chart(document.getElementById('insuranceNativChart'),{
+  type:'bar',
+  data:{labels:['Foreign-born','Native-born'],datasets:[{data:[100.0,15.3],backgroundColor:['#c4614d','#4a1028'],borderWidth:0,barThickness:70}]},
+  options:{responsive:true,maintainAspectRatio:true,layout:{padding:{top:18}},
+    plugins:{legend:{display:false},valueLabels:{color:CREAM,fmt:v=>v.toFixed(1)+'%'}},
+    scales:{y:{beginAtZero:true,max:112,ticks:{callback:v=>v+'%',color:MUTED,font:{family:"'Inter',sans-serif",size:10}},grid:{color:'rgba(255,255,255,0.06)'},border:{display:false}},
+      x:{grid:{display:false},ticks:{color:MUTED,font:{family:"'Inter',sans-serif",size:10}}}}}
+});
+
+// ─── INSURANCE BY RACE, NATIVE-BORN ONLY (mechanism 2) ─────────────────────
+new Chart(document.getElementById('insuranceNativeRaceChart'),{
+  type:'bar',
+  data:{labels:['White alone','Some Other Race','Asian alone','Black alone'],datasets:[{data:[10.0,10.0,10.2,40.1],backgroundColor:['#4a1028','#7a2336','#8b2c3e','#c4614d'],borderWidth:0}]},
+  options:{responsive:true,maintainAspectRatio:true,layout:{padding:{top:18}},
+    plugins:{legend:{display:false},valueLabels:{color:CREAM,fmt:v=>v.toFixed(1)+'%'}},
+    scales:{y:{beginAtZero:true,max:48,ticks:{callback:v=>v+'%',color:MUTED,font:{family:"'Inter',sans-serif",size:10}},grid:{color:'rgba(255,255,255,0.06)'},border:{display:false}},
+      x:{grid:{display:false},ticks:{color:MUTED,font:{family:"'Inter',sans-serif",size:10}}}}}
+});
+
+// ─── CALCULATOR (value simulator) ──────────────────────────────────────────
+const SEG = {
+  rejected:      {uses:[],                                   amt:[100,8000], err:13,  name:'No-Repayment Segment',       note:'Rejected calls are valued near $55 — independent of the inputs below.'},
+  closed:        {uses:['totalPaid'],                        amt:[100,8000], err:42,  name:'Loan Closed Segment',        note:'Value tracks the total amount repaid; loan amount and outstanding are not used.'},
+  on_time_small: {uses:['loanAmt','totalPaid','outstanding'], amt:[100,1000],  err:90,  name:'On-Time Small Loan Segment',  note:'Loan amount is constrained to ≤$1,000 for this segment.'},
+  on_time_med:   {uses:['loanAmt','totalPaid','outstanding'], amt:[1000,3000], err:118, name:'On-Time Medium Loan Segment', note:'Loan amount is constrained to $1,000–$3,000 for this segment.'},
+  on_time_large: {uses:['loanAmt','totalPaid','outstanding'], amt:[3000,8000], err:200, name:'On-Time Large Loan Segment',  note:'Loan amount is constrained to >$3,000; large loans carry the most error.'},
+  charged_off:   {uses:['totalPaid'],                        amt:[100,8000], err:64,  name:'Charged-Off Segment',        note:'Value tracks partial repayments recovered; based on total paid.'},
+  delinquent:    {uses:['totalPaid','outstanding'],          amt:[100,8000], err:228, name:'Delinquent Segment',         note:'Uses outstanding balance and total paid; high uncertainty (±$228).'}
+};
+function configFields(){
+  const cfg=SEG[document.getElementById('calcStatus').value];
+  const la=document.getElementById('loanAmt');
+  la.min=cfg.amt[0]; la.max=cfg.amt[1];
+  if(+la.value<cfg.amt[0]) la.value=cfg.amt[0];
+  if(+la.value>cfg.amt[1]) la.value=cfg.amt[1];
+  document.getElementById('loanAmtVal').textContent='$'+Number(la.value).toLocaleString();
+  [['loanAmt','field-loan'],['totalPaid','field-totalpaid'],['outstanding','field-outstanding']].forEach(([id,fid])=>{
+    const active=cfg.uses.includes(id);
+    document.getElementById(fid).classList.toggle('inactive',!active);
+    document.getElementById(id).disabled=!active;
+  });
+  document.getElementById('calcHint').textContent=cfg.note;
+  calcValue();
+}
+function calcValue(){
+  const cfg=SEG[document.getElementById('calcStatus').value];
+  const status=document.getElementById('calcStatus').value;
+  const loanAmt=+document.getElementById('loanAmt').value;
+  const totalPaid=+document.getElementById('totalPaid').value;
+  const outstanding=+document.getElementById('outstanding').value;
+  let value;
+  switch(status){
+    case 'rejected': value=54.74;break;
+    case 'closed': value=0.998*totalPaid+88.63;break;
+    case 'on_time_small': value=(0.42+(outstanding/(loanAmt+1))*0.95+(totalPaid/loanAmt)*0.28)*loanAmt; value=Math.max(50,Math.min(value,loanAmt*1.3));break;
+    case 'on_time_med': value=(0.38+(outstanding/(loanAmt+1))*1.1+(totalPaid/loanAmt)*0.22)*loanAmt; value=Math.max(100,Math.min(value,loanAmt*2.1));break;
+    case 'on_time_large': value=(0.35+(outstanding/(loanAmt+1))*1.25+(totalPaid/loanAmt)*0.18)*loanAmt; value=Math.max(200,Math.min(value,loanAmt*2.5));break;
+    case 'charged_off': value=totalPaid*0.55+180;break;
+    case 'delinquent': value=outstanding*0.45+totalPaid*0.12-200;break;
+    default: value=1000;
+  }
+  const r=document.getElementById('calcResult');
+  r.textContent='$'+Math.round(value).toLocaleString();
+  r.style.color=value<0?'#c4614d':'var(--burg)';
+  document.getElementById('calcSeg').textContent=cfg.name+' · ±$'+cfg.err+' avg error';
+}
+document.getElementById('calcStatus').addEventListener('change',configFields);
+configFields();
+
+// ─── DEMOGRAPHIC WHAT-IF ───────────────────────────────────────────────────
+const DEMO = {
+  white:{label:'White alone',     value:2171.56, acc:54.75, rate:14.948},
+  black:{label:'Black alone',     value:2343.44, acc:56.82, rate:14.895},
+  asian:{label:'Asian alone',     value:2302.87, acc:57.52, rate:14.811},
+  sor:  {label:'Some Other Race', value:2314.50, acc:58.17, rate:14.774}
+};
+const BOOK_V=2257.66, ACC_AVG=56.82, RATE_AVG=14.857;
+function demoUpdate(){
+  const g=DEMO[document.getElementById('demoGroup').value];
+  const f=+document.getElementById('demoShare').value/100;
+  document.getElementById('demoShareVal').textContent=Math.round(f*100)+'%';
+  const gap=g.value-BOOK_V, gapPct=gap/BOOK_V*100, sign=gap>=0?'+':'−';
+  document.getElementById('demoGV').textContent='$'+Math.round(g.value).toLocaleString();
+  document.getElementById('demoGVgap').textContent=sign+'$'+Math.abs(Math.round(gap)).toLocaleString()+' ('+sign+Math.abs(gapPct).toFixed(1)+'%)';
+  document.getElementById('demoAcc').textContent=g.acc.toFixed(1)+'% (vs '+ACC_AVG.toFixed(1)+'%)';
+  document.getElementById('demoRate').textContent=g.rate.toFixed(2)+'% (vs '+RATE_AVG.toFixed(2)+'%)';
+  document.getElementById('demoValueLoss').textContent='−'+(f*g.value/BOOK_V*100).toFixed(0)+'%';
+  const avgShift=((BOOK_V-f*g.value)/(1-f)-BOOK_V)/BOOK_V*100, s2=avgShift>=0?'+':'−';
+  document.getElementById('demoAvgShift').textContent=s2+Math.abs(avgShift).toFixed(1)+'%';
+  document.getElementById('demoInsight').textContent='Even at a '+Math.round(f*100)+'% share, the book’s average value moves only '+s2+Math.abs(avgShift).toFixed(1)+'%. Demographic mix is not a meaningful driver of portfolio value — what is lost tracks the group’s size, not its demographics. It is, however, a fairness and legal exposure. That asymmetry is the point of this report.';
+}
+document.getElementById('demoGroup').addEventListener('change',demoUpdate);
+demoUpdate();
+</script>
+</body>
+</html>
