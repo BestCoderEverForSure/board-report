@@ -98,6 +98,7 @@ nav{
   padding:5px 14px;border-radius:2px;
 }
 .hero-line{width:60px;height:1px;background:var(--burg2);opacity:0.5;}
+.hero-subject{font-family:var(--sans);font-size:0.7rem;font-weight:500;letter-spacing:0.2em;text-transform:uppercase;color:rgba(196,97,77,0.7);margin-bottom:1.25rem;}
 .hero-title{
   font-family:var(--serif);
   font-size:clamp(3rem,7vw,7rem);
@@ -269,11 +270,11 @@ hr.thin.light{border-color:var(--line-l);}
 .sigmag{border:1px solid var(--line-d);margin:0 0 4rem;background:rgba(255,255,255,0.02);}
 .sigmag .sm-intro{padding:1.5rem 1.75rem;border-bottom:1px solid var(--line-d);font-size:0.85rem;color:var(--muted-d);line-height:1.75;}
 .sigmag .sm-intro strong{color:var(--cream);font-weight:500;}
-.sm-row{display:grid;grid-template-columns:1.3fr 1fr 1.3fr;gap:1.25rem;padding:1.1rem 1.75rem;border-bottom:1px solid rgba(255,255,255,0.06);align-items:start;}
+.sm-row{display:grid;grid-template-columns:1fr 1.8fr 0.9fr;gap:1.25rem;padding:1.1rem 1.75rem;border-bottom:1px solid rgba(255,255,255,0.06);align-items:start;}
 .sm-row.head{font-size:0.58rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--muted-d);font-weight:600;background:rgba(255,255,255,0.03);}
 .sm-row:last-child{border-bottom:none;}
 .sm-name{font-size:0.85rem;color:var(--cream);}
-.sm-sig{font-size:0.8rem;color:#f4a68a;line-height:1.5;}
+.sm-sig{font-size:0.72rem;color:var(--muted-d);line-height:1.55;}
 .sm-mag{font-size:0.8rem;color:var(--muted-d);line-height:1.5;}
 .sm-mag strong{color:var(--cream);font-weight:500;}
 
@@ -284,7 +285,7 @@ hr.thin.light{border-color:var(--line-l);}
 .f-body h3{font-family:var(--serif);font-size:1.4rem;font-weight:400;color:var(--cream);margin-bottom:0.4rem;}
 .f-body p{font-size:0.85rem;color:var(--muted-d);line-height:1.8;}
 .f-body .lead-plain{color:var(--cream);font-weight:400;}
-.pstat{font-size:0.7rem;letter-spacing:0.06em;color:var(--burg2);background:rgba(196,97,77,0.12);border:1px solid rgba(196,97,77,0.25);padding:4px 10px;border-radius:1px;white-space:nowrap;font-weight:500;}
+.pstat{font-size:0.64rem;letter-spacing:0.04em;color:var(--muted-d);white-space:nowrap;font-weight:400;align-self:start;}
 .plain-stat{font-size:0.8rem;color:var(--muted-d);margin:0.5rem 0 1.5rem;font-style:italic;line-height:1.6;}
 .plain-stat b{color:#f4a68a;font-style:normal;font-weight:500;}
 .f-charts{display:grid;grid-template-columns:1fr 1fr;gap:2rem;}
@@ -341,6 +342,15 @@ input[type=range]::-moz-range-thumb{width:14px;height:14px;background:var(--burg
 .calc-note strong{color:var(--burg);font-weight:600;}
 .calc-disclaimer{font-size:0.73rem;color:var(--muted-l);line-height:1.65;margin-top:1.25rem;padding-top:1.25rem;border-top:1px solid var(--line-l);font-style:italic;}
 .tool-label{font-family:var(--serif);font-size:1.2rem;color:var(--burg);font-weight:500;margin:0 0 1.5rem;padding-bottom:0.6rem;border-bottom:1px solid var(--line-l);}
+.sens-bar{border:1px solid var(--line-l);background:rgba(255,255,255,0.55);padding:1.75rem 2rem;margin-bottom:2.5rem;}
+.sens-label{font-size:0.62rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted-l);font-weight:600;margin-bottom:1.25rem;}
+.sens-row{display:grid;grid-template-columns:160px 1fr 1.2fr;align-items:center;gap:1.25rem;margin-bottom:0.85rem;}
+.sens-row:last-child{margin-bottom:0;}
+.sens-name{font-size:0.8rem;color:var(--text-l);font-weight:500;}
+.sens-track{height:4px;background:var(--line-l);border-radius:2px;overflow:hidden;}
+.sens-fill{height:100%;background:linear-gradient(90deg,var(--burg),var(--burg2));border-radius:2px;transition:width 0.4s ease;}
+.sens-note{font-size:0.73rem;color:var(--muted-l);line-height:1.4;}
+.sens-foot{font-size:0.72rem;color:var(--muted-l);margin-top:1.25rem;line-height:1.6;border-top:1px solid var(--line-l);padding-top:1rem;font-style:italic;}
 .tool-desc{font-size:0.88rem;color:var(--muted-l);line-height:1.75;max-width:640px;margin:-0.5rem 0 2rem;}
 .na-tag{display:none;font-size:0.52rem;letter-spacing:0.1em;color:var(--burg);border:1px solid rgba(139,44,62,0.35);padding:1px 6px;border-radius:2px;margin-left:0.5rem;vertical-align:middle;text-transform:uppercase;font-weight:600;}
 .calc-field.inactive{opacity:0.4;}
@@ -427,6 +437,7 @@ canvas{max-height:260px;}
   .calc-wrap,.rec-intro,.ethics-intro,.f-charts,.discoveries,.eth-grid,
   .deal-grid,.claim-grid,.reco-conds,.demo-wrap,.lever-grid{grid-template-columns:1fr;}
   .find-card.center-lone{max-width:none;grid-column:auto;}
+  .sens-row{grid-template-columns:1fr;gap:0.3rem;}
   .reco-conds{gap:1.25rem;}
   .discoveries{border:none;}
   .disc{border:1px solid var(--line-d);border-bottom:none;padding:2rem 1.5rem;}
@@ -443,6 +454,25 @@ canvas{max-height:260px;}
   .hero-title{font-size:3rem;}
   .s-title{font-size:2.2rem;}
 }
+
+/* ── TABS ───────────────────────────────────────────────── */
+.nav-links{flex-wrap:wrap;}
+.nav-links button.tabbtn{background:none;border:none;font-family:var(--sans);font-size:0.7rem;letter-spacing:0.08em;color:rgba(245,240,235,0.55);text-transform:uppercase;cursor:pointer;padding:6px 0;transition:color .3s;border-bottom:2px solid transparent;}
+.nav-links button.tabbtn:hover{color:var(--cream);}
+.nav-links button.tabbtn.active{color:var(--cream);border-bottom-color:var(--burg2);}
+/* ── GUIDE / CHATBOT ────────────────────────────────────── */
+#guideOrb{position:fixed;right:1.5rem;bottom:1.5rem;width:54px;height:54px;border-radius:50%;background:linear-gradient(135deg,var(--burg),var(--burg2));color:var(--cream);border:none;font-family:var(--serif);font-size:1.5rem;cursor:pointer;z-index:400;box-shadow:0 6px 24px rgba(0,0,0,0.35);transition:transform .2s;}
+#guideOrb:hover{transform:scale(1.08);}
+#guidePanel{position:fixed;right:1.5rem;bottom:5.5rem;width:340px;max-width:calc(100vw - 3rem);max-height:72vh;background:var(--wine2);border:1px solid var(--line-d);border-radius:6px;z-index:400;display:none;flex-direction:column;box-shadow:0 14px 44px rgba(0,0,0,0.5);}
+#guidePanel.show{display:flex;}
+#guideHead{padding:0.9rem 1.1rem;border-bottom:1px solid var(--line-d);font-family:var(--serif);font-size:1.05rem;color:var(--cream);display:flex;justify-content:space-between;align-items:center;flex-shrink:0;}
+#guideHead .gx{cursor:pointer;color:var(--muted-d);font-size:1.3rem;line-height:1;}
+#guideBody{padding:1.1rem;overflow-y:auto;}
+.g-intro{font-size:0.84rem;color:var(--muted-d);line-height:1.7;margin-bottom:1rem;}
+.g-intro b{color:var(--cream);font-weight:500;}
+.g-q{display:block;width:100%;text-align:left;background:rgba(196,97,77,0.1);border:1px solid var(--line-d);color:var(--cream);font-family:var(--sans);font-size:0.8rem;padding:0.6rem 0.8rem;margin-bottom:0.5rem;border-radius:3px;cursor:pointer;transition:background .2s;line-height:1.4;}
+.g-q:hover{background:rgba(196,97,77,0.22);}
+.g-a{font-size:0.82rem;color:var(--muted-d);line-height:1.7;padding:0.5rem 0.2rem 0.9rem;}
 </style>
 </head>
 <body>
@@ -456,20 +486,17 @@ canvas{max-height:260px;}
     <div class="nav-group">Group 007</div>
   </div>
   <div class="nav-links">
-    <a href="#summary">Summary</a>
-    <a href="#mission">Context</a>
-    <a href="#algorithm">Model</a>
-    <a href="#findings">Drivers</a>
-    <a href="#discrimination">Audit</a>
-    <a href="#dealrisk">Deal Risk</a>
-    <a href="#calculator">Simulator</a>
-    <a href="#recommendations">Actions</a>
-    <a href="#ethics">Ethics</a>
+    <button class="tabbtn active" data-tab="overview">Overview</button>
+    <button class="tabbtn" data-tab="model">The Model</button>
+    <button class="tabbtn" data-tab="fairness">Fairness</button>
+    <button class="tabbtn" data-tab="dealrisk">Deal Risk</button>
+    <button class="tabbtn" data-tab="tools">Tools</button>
+    <button class="tabbtn" data-tab="actions">Actions</button>
   </div>
 </nav>
 
 <!-- ═══ HERO ══════════════════════════════════════════════════════════════ -->
-<section id="hero">
+<section id="hero" data-tab="overview">
   <div class="hero-bg-text">007</div>
   <div class="hero-inner">
     <div class="hero-eyebrow">
@@ -477,6 +504,7 @@ canvas{max-height:260px;}
       <div class="hero-line"></div>
       <div class="hero-tag">Confidential · Pre-Close Intelligence</div>
     </div>
+    <p class="hero-subject">How the prospective acquirer values Siren Capital — decoded</p>
     <h1 class="hero-title">
       We opened<br>
       the <em>black box.</em><br>
@@ -484,11 +512,12 @@ canvas{max-height:260px;}
       board needs to see.</strong>
     </h1>
     <p class="hero-sub">
-      Before this acquisition closes, the board should understand how Siren Capital's algorithm actually
-      values loan calls — and what patterns sit inside it. We rebuilt the bank's valuation engine to within
-      <strong>2.4% of the true value on average</strong> (graded at 97.64%), and found small but statistically
-      unmistakable differences in outcomes by race and gender. The amounts per borrower are modest; the deal and
-      regulatory risk they create is not.
+      Before we sit down with the acquirer, Siren's board needs to know exactly how the buyer's model
+      values our customer book — so we can defend that number and <strong>raise</strong> it. We reverse-engineered
+      that model to <strong>97.64% accuracy</strong>, so we know precisely what lifts value per caller. It also
+      surfaced something we must own first: our own lending attached compulsory insurance by <strong>race and
+      national origin</strong>, regardless of credit score — the discrimination the buyer's lawyers are already
+      asking about. We can raise the valuation and protect it — but only if we get ahead of that finding.
     </p>
     <div class="hero-stats">
       <div class="h-stat">
@@ -497,11 +526,11 @@ canvas{max-height:260px;}
       </div>
       <div class="h-stat">
         <div class="num">97.64<span>%</span></div>
-        <div class="lbl">Replication Accuracy</div>
+        <div class="lbl">Match to bank's value</div>
       </div>
       <div class="h-stat">
         <div class="num">$53</div>
-        <div class="lbl">Mean Absolute Error</div>
+        <div class="lbl">Avg. error per call</div>
       </div>
       <div class="h-stat">
         <div class="num">5</div>
@@ -516,7 +545,7 @@ canvas{max-height:260px;}
 </section>
 
 <!-- ═══ EXECUTIVE BRIEFING ════════════════════════════════════════════════ -->
-<section id="summary">
+<section id="summary" data-tab="overview">
   <div class="container">
     <div class="reveal">
       <span class="s-tag">— Executive Briefing</span>
@@ -525,8 +554,7 @@ canvas{max-height:260px;}
 
     <div class="exec-grid">
       <div class="reveal">
-        <p class="exec-lead">We were asked to do two things before this deal closes: <strong>replicate</strong> Siren Capital's
-        undisclosed loan-valuation algorithm, and <strong>audit</strong> it for fairness. We did both.</p>
+        <p class="exec-lead">Our mandate is to maximise Siren's valuation in this sale. So we did two things: reverse-engineered how the <strong>acquirer's</strong> model values our book — to find what lifts value per caller — and stress-tested <strong>our own lending</strong> for the discrimination the buyer's lawyers have flagged. We did both.</p>
         <ul class="exec-find">
           <li><span class="efn">1</span><span>We rebuilt the black-box pricing model to <strong>97.64% accuracy</strong> (average error ~$53 on a ~$2,233 call). The logic is now transparent and explainable.</span></li>
           <li><span class="efn">2</span><span>Most demographic gaps (rate, value) are real but tiny. Compulsory insurance is the exception — and it runs on <strong>two protected characteristics</strong>: every <strong>foreign-born</strong> borrower is forced onto it (100% vs 16%), and among native-born, <strong>Black</strong> borrowers get it 4× as often as everyone else (41% vs 10%). Neither is explained by credit score.</span></li>
@@ -534,22 +562,22 @@ canvas{max-height:260px;}
         </ul>
         <div class="reco-pill">
           <span class="rl">Our recommendation to the board</span>
-          <div class="rt">Proceed — but conditionally.</div>
-          <p>Do not walk, and do not sign as-is. Close only with (a) a pre-close fair-lending legal opinion, (b) reps, warranties, indemnity and an escrow covering fair-lending exposure, and (c) a remediation-and-monitoring plan as a condition of closing. Detail in the Action Plan. The upside is real, too: once remediated, the same model reveals concrete levers to lift value per caller — see Drivers.</p>
+          <div class="rt">Raise the number — and get ahead of the risk.</div>
+          <p>Two moves protect and lift Siren's valuation. <strong>First, pull the value levers</strong> — converting more callers into performing loans, cutting delinquency, and deepening relationships all raise value per caller (see Drivers). <strong>Second, get ahead of the fairness finding</strong> — remediate the discriminatory insurance rule now and disclose it to the buyer on our terms. Their diligence will find it anyway; a proactive fix protects our price far better than a post-close clawback — and it is the right thing to do.</p>
         </div>
       </div>
 
       <div class="reveal">
         <div class="storyboard">
           <div class="sb-head">How to read this report — 8 chapters</div>
-          <a class="sb-item" href="#mission"><span class="sb-rn">I</span><span class="sb-body"><span class="tt">Context</span><br><span class="ds">Why an algorithmic audit, and why now.</span></span></a>
-          <a class="sb-item" href="#algorithm"><span class="sb-rn">II</span><span class="sb-body"><span class="tt">The Model</span><br><span class="ds">How we cracked the black box to 97.64%.</span></span></a>
-          <a class="sb-item" href="#findings"><span class="sb-rn">III</span><span class="sb-body"><span class="tt">What It Values</span><br><span class="ds">The real drivers of a call's worth.</span></span></a>
-          <a class="sb-item" href="#discrimination"><span class="sb-rn">IV</span><span class="sb-body"><span class="tt">Fairness Audit</span><br><span class="ds">Five flags — significance vs. magnitude.</span></span></a>
-          <a class="sb-item" href="#dealrisk"><span class="sb-rn">V</span><span class="sb-body"><span class="tt">Deal Risk</span><br><span class="ds">What it means in money and exposure.</span></span></a>
-          <a class="sb-item" href="#calculator"><span class="sb-rn">VI</span><span class="sb-body"><span class="tt">Simulator</span><br><span class="ds">A what-if tool for the valuation logic.</span></span></a>
-          <a class="sb-item" href="#recommendations"><span class="sb-rn">VII</span><span class="sb-body"><span class="tt">Action Plan</span><br><span class="ds">Six prioritized actions, each with an owner.</span></span></a>
-          <a class="sb-item" href="#ethics"><span class="sb-rn">VIII</span><span class="sb-body"><span class="tt">Ethics</span><br><span class="ds">Who's affected, safeguards, our obligations.</span></span></a>
+          <a class="sb-item" href="javascript:void(0)" onclick="go('model')"><span class="sb-rn">I</span><span class="sb-body"><span class="tt">Context</span><br><span class="ds">Why an algorithmic audit, and why now.</span></span></a>
+          <a class="sb-item" href="javascript:void(0)" onclick="go('model')"><span class="sb-rn">II</span><span class="sb-body"><span class="tt">The Model</span><br><span class="ds">How we cracked the black box to 97.64%.</span></span></a>
+          <a class="sb-item" href="javascript:void(0)" onclick="go('model')"><span class="sb-rn">III</span><span class="sb-body"><span class="tt">What It Values</span><br><span class="ds">The real drivers of a call's worth.</span></span></a>
+          <a class="sb-item" href="javascript:void(0)" onclick="go('fairness')"><span class="sb-rn">IV</span><span class="sb-body"><span class="tt">Fairness Audit</span><br><span class="ds">Five flags — significance vs. magnitude.</span></span></a>
+          <a class="sb-item" href="javascript:void(0)" onclick="go('dealrisk')"><span class="sb-rn">V</span><span class="sb-body"><span class="tt">Deal Risk</span><br><span class="ds">What it means in money and exposure.</span></span></a>
+          <a class="sb-item" href="javascript:void(0)" onclick="go('tools')"><span class="sb-rn">VI</span><span class="sb-body"><span class="tt">Simulator</span><br><span class="ds">A what-if tool for the valuation logic.</span></span></a>
+          <a class="sb-item" href="javascript:void(0)" onclick="go('actions')"><span class="sb-rn">VII</span><span class="sb-body"><span class="tt">Action Plan</span><br><span class="ds">Six prioritized actions, each with an owner.</span></span></a>
+          <a class="sb-item" href="javascript:void(0)" onclick="go('actions')"><span class="sb-rn">VIII</span><span class="sb-body"><span class="tt">Ethics</span><br><span class="ds">Who's affected, safeguards, our obligations.</span></span></a>
         </div>
       </div>
     </div>
@@ -559,7 +587,7 @@ canvas{max-height:260px;}
         <h4>What this analysis can claim</h4>
         <ul>
           <li>Accurately replicate how the bank prices loan calls, segment by segment.</li>
-          <li>Detect statistically robust, unadjusted differences in outcomes by race and gender.</li>
+          <li>Detect statistically robust, unadjusted differences in outcomes by race, national origin and gender.</li>
           <li>Show the compulsory-insurance gap is not explained by credit score — it holds in every credit band.</li>
           <li>Quantify the one cost effect with a direct dollar value — the gender rate gap.</li>
           <li>Flag where the board faces fair-lending and deal risk.</li>
@@ -579,7 +607,7 @@ canvas{max-height:260px;}
 </section>
 
 <!-- ═══ CONTEXT ═══════════════════════════════════════════════════════════ -->
-<section id="mission">
+<section id="mission" data-tab="model">
   <div class="container">
     <div class="reveal" style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:2rem;margin-bottom:1rem;">
       <div>
@@ -587,7 +615,7 @@ canvas{max-height:260px;}
         <h2 class="s-title">Why we're<br>here.</h2>
       </div>
       <p class="s-desc" style="max-width:420px;">
-        The acquisition of Siren Capital triggered an independent algorithmic audit. We were tasked with replicating the bank's valuation model — and in doing so, surfaced patterns the board should weigh before signing.
+        Siren's board engaged us to maximise the company's valuation in this sale. We reverse-engineered how the acquirer's model values our book — and, in doing so, surfaced a fairness pattern we need to get ahead of before the buyer's lawyers do.
       </p>
     </div>
 
@@ -597,28 +625,28 @@ canvas{max-height:260px;}
           <div class="m-step-num">I</div>
           <div class="m-step-body">
             <h3>The Acquisition</h3>
-            <p>Global Bank is acquiring Siren Capital. The crown jewel: the Master Call Ledger — 231,276 customer interactions with valuations generated by a proprietary algorithm the bank has never fully disclosed.</p>
+            <p>A global bank is acquiring a large stake in Siren Capital. Our crown jewel is the Master Call Ledger — 231,276 customer interactions — which the buyer prices with a proprietary valuation model it has not disclosed to us.</p>
           </div>
         </div>
         <div class="m-step">
           <div class="m-step-num">II</div>
           <div class="m-step-body">
             <h3>The Mandate</h3>
-            <p>Independently replicate the bank's valuation model, value 25,698 new calls, and — prompted by a whistle-blower's allegation of systemic discrimination that the acquirer's legal team wants answered before close — conduct a fairness audit.</p>
+            <p>Prove and grow the value of Siren's book for the sale: reverse-engineer how the buyer values our calls, value the remaining 25,698 — and, because a whistle-blower's discrimination allegation has the buyer's legal team asking questions, get ahead of it with our own fairness audit.</p>
           </div>
         </div>
         <div class="m-step">
           <div class="m-step-num">III</div>
           <div class="m-step-body">
             <h3>The Discovery</h3>
-            <p>We achieved 97.64% accuracy — close enough to decode the algorithm's logic. In doing so, we found that race and gender are statistically significant predictors of outcomes, in ways that warrant a closer, controlled look.</p>
+            <p>We decoded the buyer's model to 97.64% — enough to know exactly what drives our valuation, and what would lift it. We also found a pattern in our own lending — compulsory insurance assigned by race and national origin — that we must address before it costs us at the table.</p>
           </div>
         </div>
         <div class="m-step">
           <div class="m-step-num">IV</div>
           <div class="m-step-body">
             <h3>This Report</h3>
-            <p>What follows is our board intelligence package: how the algorithm works, what the data shows, what it does and does not prove, and what we recommend the board do — now.</p>
+            <p>What follows is our board intelligence package: how the buyer values our book, what lifts that value, what the fairness data does and does not prove, and what we recommend Siren's board do to maximise and protect the valuation — now.</p>
           </div>
         </div>
       </div>
@@ -632,8 +660,8 @@ canvas{max-height:260px;}
         </p>
         <hr class="thin light">
         <div class="alert-box warn">
-          <h4>Pre-Closing Legal Risk</h4>
-          <p>If the algorithm encodes discriminatory patterns, the acquirer can inherit liability under ECOA and the Fair Housing Act. This board must decide — before signing — whether to proceed, renegotiate, or require remediation.</p>
+          <h4>Why this threatens our valuation</h4>
+          <p>Because the buyer would inherit any fair-lending exposure under ECOA and the Fair Housing Act, their lawyers will use an unaddressed pattern to discount the price — or claw it back later. The move is to get ahead of it: remediate and disclose on our terms before Monday.</p>
         </div>
       </div>
     </div>
@@ -641,7 +669,7 @@ canvas{max-height:260px;}
 </section>
 
 <!-- ═══ ALGORITHM ══════════════════════════════════════════════════════════ -->
-<section id="algorithm">
+<section id="algorithm" data-tab="model">
   <div class="container">
     <div class="algo-header reveal">
       <div>
@@ -741,7 +769,7 @@ canvas{max-height:260px;}
 </section>
 
 <!-- ═══ FINDINGS / DRIVERS ═════════════════════════════════════════════════ -->
-<section id="findings">
+<section id="findings" data-tab="model">
   <div class="container">
     <div class="reveal" style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:2rem;margin-bottom:3.5rem;">
       <div>
@@ -813,7 +841,7 @@ canvas{max-height:260px;}
 </section>
 
 <!-- ═══ DISCRIMINATION / AUDIT ════════════════════════════════════════════ -->
-<section id="discrimination">
+<section id="discrimination" data-tab="fairness">
   <div class="container">
     <div class="disc-intro reveal">
       <div>
@@ -832,38 +860,35 @@ canvas{max-height:260px;}
     <!-- SIGNIFICANCE VS MAGNITUDE -->
     <div class="sigmag reveal">
       <div class="sm-intro">
-        <strong>Read significance and magnitude separately.</strong> With 200,000+ records, even microscopic
-        differences register as "highly significant." Significance tells us a pattern is <em>real, not noise</em>;
-        magnitude tells us <em>how much it matters</em>. Most gaps below are real but small — with one striking
-        exception: the compulsory-insurance disparity, which is both highly significant <em>and</em> large.
+        <strong>Business impact leads.</strong> Each row says what the finding means in plain terms first; the confidence column just confirms the pattern is real, not noise. With 200,000+ records even trivial gaps reach high significance — so <em>magnitude</em> is what the board should weigh.
       </div>
       <div class="sm-row head">
-        <div>Finding</div><div>Statistical significance</div><div>Real-world magnitude</div>
+        <div>Finding</div><div>Business impact</div><div style="opacity:0.55;">Statistical confidence</div>
       </div>
       <div class="sm-row">
         <div class="sm-name" style="color:var(--burg2);">★ Race &rarr; compulsory insurance</div>
-        <div class="sm-sig">&chi;&sup2; = 8,489 · z = 92 · p &lt; 10&#8315;&#179;&#8304;&#8304;</div>
-        <div class="sm-mag"><strong>Black 48.9% vs White 22.0%</strong> — 2.2&times; as often, a 27 pp gap that <strong>holds in every credit-score band</strong>. Large <em>and</em> robust — the headline finding.</div>
+        <div class="sm-mag"><strong>Black borrowers are placed on compulsory insurance 2.2&times; as often as White borrowers</strong> (48.9% vs 22.0%) — a 27 pp gap that holds in <strong>every credit-score band</strong>, so risk doesn&#8217;t explain it. Direct ECOA exposure. <em>The headline finding.</em></div>
+        <div class="sm-sig">χ² = 8,489 · z = 92 · p &lt; 10⁻³⁰⁰</div>
       </div>
       <div class="sm-row">
         <div class="sm-name">Race &rarr; call VALUE</div>
-        <div class="sm-sig">p &asymp; 9&times;10&#8315;&#185;&#8313; — &lt; 1 in a billion billion</div>
-        <div class="sm-mag"><strong>$172 per call</strong> unadjusted gap (~7.6%). But VALUE is the bank's internal asset valuation, partly driven by repayment behaviour — not a price the borrower pays.</div>
+        <div class="sm-mag"><strong>~$172 per call</strong> gap between racial groups (~7.6%) — but VALUE is the bank&#8217;s internal asset score, not a price the borrower pays. A flag for controlled review, not proof of pricing bias.</div>
+        <div class="sm-sig">p ≈ 9×10⁻¹⁹</div>
       </div>
       <div class="sm-row">
         <div class="sm-name">Race &rarr; loan acceptance</div>
-        <div class="sm-sig">p &asymp; 4&times;10&#8315;&#178;&#8311;</div>
-        <div class="sm-mag"><strong>3.4 pp spread</strong> (54.8%–58.2%). Passes the 4/5ths rule at 94.1% — no presumptive violation, but significant enough to review.</div>
+        <div class="sm-mag"><strong>3.4 pp spread</strong> in approval (54.8%–58.2%). Passes the legal 4/5ths safe-harbour at 94.1% — no presumptive violation, but worth monitoring.</div>
+        <div class="sm-sig">p ≈ 4×10⁻²⁷</div>
       </div>
       <div class="sm-row">
         <div class="sm-name">Race &rarr; interest rate</div>
-        <div class="sm-sig">p &asymp; 9&times;10&#8315;&#8308;</div>
-        <div class="sm-mag"><strong>0.17 pp</strong> highest-to-lowest. On a $1,900 loan, ~$3 a year. Real pattern, trivial amount.</div>
+        <div class="sm-mag"><strong>~$3 per borrower / year</strong> on a typical $1,900 loan. The pattern is real; the dollar impact is negligible.</div>
+        <div class="sm-sig">p ≈ 9×10⁻⁴</div>
       </div>
       <div class="sm-row">
         <div class="sm-name">Gender &rarr; interest rate</div>
+        <div class="sm-mag"><strong>~$1.60 per borrower / year</strong> extra for women — about <strong>$104K/year</strong> across 65,922 accepted women. Clearest protected-class channel, smallest per person.</div>
         <div class="sm-sig">p = 0.003</div>
-        <div class="sm-mag"><strong>0.083 pp</strong> (women higher) &asymp; <strong>~$1.60 per borrower / year</strong>; ~$104K across 65,922 accepted women. The clearest protected-class channel — and the smallest.</div>
       </div>
     </div>
 
@@ -1057,7 +1082,7 @@ canvas{max-height:260px;}
 </section>
 
 <!-- ═══ DEAL RISK & EXPOSURE ══════════════════════════════════════════════ -->
-<section id="dealrisk">
+<section id="dealrisk" data-tab="dealrisk">
   <div class="container">
     <div class="reveal" style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:2rem;margin-bottom:1rem;">
       <div>
@@ -1065,7 +1090,7 @@ canvas{max-height:260px;}
         <h2 class="s-title">What it means<br><em>for the deal.</em></h2>
       </div>
       <p class="s-desc">
-        Translate the statistics into the only language the deal cares about: money and risk. The headline number is small. The tail it opens is not.
+        What the fairness finding could cost <em>us</em>, the seller, if we don't get ahead of it. The measurable overcharge is small; the discount a buyer's lawyers could extract — or a post-close clawback — is not.
       </p>
     </div>
 
@@ -1145,7 +1170,7 @@ canvas{max-height:260px;}
 </section>
 
 <!-- ═══ CALCULATOR / SIMULATOR ════════════════════════════════════════════ -->
-<section id="calculator">
+<section id="calculator" data-tab="tools">
   <div class="container">
     <div class="reveal" style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:2rem;margin-bottom:3.5rem;">
       <div>
@@ -1153,11 +1178,21 @@ canvas{max-height:260px;}
         <h2 class="s-title">Explore it<br><em>yourself.</em></h2>
       </div>
       <p class="s-desc">
-        Two interactive tools: price any loan call with the reverse-engineered model, then stress-test what a demographic shift would do to the book.
+        Two interactive tools. First, price any loan call with the reverse-engineered model — the sensitivity bar shows which factors move VALUE most before you touch a slider. Then stress-test what a demographic shift would do to the book.
       </p>
     </div>
 
     <div class="tool-label">01 · Loan call value simulator</div>
+    <div class="sens-bar reveal">
+      <div class="sens-label">What drives VALUE most — for the selected segment</div>
+      <div class="sens-rows">
+        <div class="sens-row"><span class="sens-name">Loan status</span><div class="sens-track"><div class="sens-fill" style="width:100%"></div></div><span class="sens-note">Dominates — a performing loan is worth ~75× a rejected call</span></div>
+        <div class="sens-row"><span class="sens-name">Outstanding principal</span><div class="sens-track"><div class="sens-fill" style="width:72%"></div></div><span class="sens-note">Sets the floor for active-loan value</span></div>
+        <div class="sens-row"><span class="sens-name">Total amount paid</span><div class="sens-track"><div class="sens-fill" style="width:48%"></div></div><span class="sens-note">Repayment progress lifts value directly</span></div>
+      </div>
+      <p class="sens-foot">Move the sliders below to see how each factor shifts the estimated value. Loan status (top) is set by the dropdown — it has the largest single effect.</p>
+    </div>
+
     <div class="calc-wrap">
       <div class="calc-controls reveal">
         <div class="calc-field">
@@ -1255,7 +1290,7 @@ canvas{max-height:260px;}
 </section>
 
 <!-- ═══ RECOMMENDATIONS / ACTION PLAN ═════════════════════════════════════ -->
-<section id="recommendations">
+<section id="recommendations" data-tab="actions">
   <div class="container">
     <div class="rec-intro reveal">
       <div>
@@ -1269,11 +1304,11 @@ canvas{max-height:260px;}
 
     <div class="reco-banner reveal">
       <span class="rb-l">Decision required at this board meeting</span>
-      <h3>Proceed — conditionally. Protect the downside in the deal terms.</h3>
+      <h3>Lift the valuation — and own the fairness issue before the buyer's lawyers do.</h3>
       <div class="reco-conds">
-        <div class="reco-cond"><div class="cn">Condition A</div><p>Pre-close fair-lending legal opinion on ECOA / disparate-impact exposure, using full credit-bureau data.</p></div>
-        <div class="reco-cond"><div class="cn">Condition B</div><p>Fair-lending reps & warranties, indemnity, and an escrow / holdback sized to the legal opinion.</p></div>
-        <div class="reco-cond"><div class="cn">Condition C</div><p>A remediation-and-monitoring plan as a closing condition, with model retraining on a defined timeline.</p></div>
+        <div class="reco-cond"><div class="cn">Move A</div><p>Commission our own fair-lending review now — so we walk into Monday with the facts and a fix, not a surprise sprung by the buyer.</p></div>
+        <div class="reco-cond"><div class="cn">Move B</div><p>Proactively offer clean fair-lending reps backed by a remediation commitment — pre-empting a buyer-imposed discount or oversized escrow.</p></div>
+        <div class="reco-cond"><div class="cn">Move C</div><p>Start remediating the insurance-assignment rule immediately, with monitoring — turning a liability into a managed, disclosed item.</p></div>
       </div>
     </div>
 
@@ -1282,7 +1317,7 @@ canvas{max-height:260px;}
         <div class="rec-row-num">01</div>
         <div class="rec-row-body">
           <h3>Commission an Independent Fair-Lending Audit</h3>
-          <p>Retain external fair-lending counsel to formally assess ECOA exposure before signing. Our statistics are a starting flag; a controlled legal-and-statistical opinion is needed before the board can be said to have discharged its fiduciary duty.</p>
+          <p>Retain external fair-lending counsel to formally assess our ECOA exposure now, before we sit with the buyer. Our statistics are a starting flag; a controlled legal-and-statistical opinion lets Siren's board act on the facts and discharge its fiduciary duty.</p>
           <p class="rec-meta"><b>Owner:</b> Deal counsel + external fair-lending firm &nbsp;·&nbsp; <b>First step:</b> scope a controlled (multivariate) review on full credit data this week.</p>
         </div>
         <div class="rec-tag imm">Immediate</div>
@@ -1290,17 +1325,17 @@ canvas{max-height:260px;}
       <div class="rec-row">
         <div class="rec-row-num">02</div>
         <div class="rec-row-body">
-          <h3>Require Disclosure &amp; Indemnification in the Purchase Agreement</h3>
-          <p>Negotiate representations and warranties that Siren Capital has complied with fair-lending laws, plus indemnification and an escrow for any pre-close regulatory action arising from the patterns identified here.</p>
-          <p class="rec-meta"><b>Owner:</b> M&amp;A counsel &nbsp;·&nbsp; <b>First step:</b> add fair-lending reps, indemnity and a sized holdback to the SPA draft.</p>
+          <h3>Offer Clean Reps — Backed by Real Remediation</h3>
+          <p>Get ahead of the buyer's diligence: proactively offer fair-lending representations backed by an active remediation plan. Volunteering a fix and a clean rep protects the price far better than conceding a large escrow once their lawyers raise it first.</p>
+          <p class="rec-meta"><b>Owner:</b> M&amp;A counsel &nbsp;·&nbsp; <b>First step:</b> bring a remediation plan and proposed reps to the table before the buyer asks.</p>
         </div>
         <div class="rec-tag imm">Immediate</div>
       </div>
       <div class="rec-row">
         <div class="rec-row-num">03</div>
         <div class="rec-row-body">
-          <h3>Audit and Retrain the Valuation Algorithm</h3>
-          <p>Engage a model-risk team to identify which proxy variables carry race and gender information. Remove or re-weight them and revalidate for disparate impact before resuming production use.</p>
+          <h3>Fix the Insurance-Assignment Rule</h3>
+          <p>The disparity lives in how Siren's origination attaches compulsory insurance — not in the buyer's valuation model. Identify and strip the race- and nativity-correlated triggers, then revalidate that the assignment is risk-based only.</p>
           <p class="rec-meta"><b>Owner:</b> Model risk / data science &nbsp;·&nbsp; <b>First step:</b> run the disparity tests <em>with</em> credit-risk controls to confirm or clear each flag.</p>
         </div>
         <div class="rec-tag near">90 Days</div>
@@ -1326,8 +1361,8 @@ canvas{max-height:260px;}
       <div class="rec-row">
         <div class="rec-row-num">06</div>
         <div class="rec-row-body">
-          <h3>Leverage the Algorithm's Accuracy as an Asset</h3>
-          <p>Our 97.64% replication shows Siren's valuation methodology is highly systematic. Once remediated for fairness, it is genuine intellectual property for portfolio management and pricing — a reason this deal can still be value-creating.</p>
+          <h3>Use the Decoded Model to Argue the Price Up</h3>
+          <p>Because we can reproduce the buyer's valuation to 97.64%, we can defend our book line by line in their own terms — and use the value levers to argue for a higher multiple, not simply accept theirs.</p>
           <p class="rec-meta"><b>Owner:</b> Portfolio operations &nbsp;·&nbsp; <b>First step:</b> after remediation, scope a productized pricing engine.</p>
         </div>
         <div class="rec-tag long">Strategic</div>
@@ -1337,7 +1372,7 @@ canvas{max-height:260px;}
 </section>
 
 <!-- ═══ ETHICS ════════════════════════════════════════════════════════════ -->
-<section id="ethics">
+<section id="ethics" data-tab="actions">
   <div class="container">
     <div class="ethics-intro reveal">
       <div>
@@ -1358,7 +1393,7 @@ canvas{max-height:260px;}
       <div class="eth-card">
         <div class="eth-num">II — Affected Parties</div>
         <h3>Who Is Affected — by the findings</h3>
-        <p>Most directly affected: <strong>foreign-born</strong> borrowers — all 33,228 are forced onto compulsory insurance (100%) — and <strong>native-born Black</strong> borrowers, charged it 4× as often as other native-born groups; neither is explained by credit score. Both are ECOA-protected (national origin and race). More modestly, 65,922 accepted women paid ~$1.60/year more on average, and acceptance varied 3.4 pp by race. The acquirer inherits the legal, financial and reputational exposure.</p>
+        <p>Most directly affected: <strong>foreign-born</strong> borrowers — all 33,228 are forced onto compulsory insurance (100%) — and <strong>native-born Black</strong> borrowers, charged it 4× as often as other native-born groups; neither is explained by credit score. Both are ECOA-protected (national origin and race). More modestly, 65,922 accepted women paid ~$1.60/year more on average, and acceptance varied 3.4 pp by race. Because the buyer would inherit this exposure, it directly threatens our valuation — which is why we act on it now rather than wait for their lawyers to surface it.</p>
       </div>
       <div class="eth-card">
         <div class="eth-num">III — Affected Parties</div>
@@ -1389,11 +1424,11 @@ canvas{max-height:260px;}
 </section>
 
 <!-- ═══ THE BOTTOM LINE ═══ -->
-<section style="background:var(--wine2);padding:6rem 0;border-top:1px solid var(--line-d);">
+<section data-tab="overview" style="background:var(--wine2);padding:6rem 0;border-top:1px solid var(--line-d);">
   <div class="container" style="text-align:center;">
     <span class="s-tag" style="color:var(--burg2);">— The bottom line</span>
-    <h2 style="font-family:var(--serif);font-size:clamp(1.8rem,4vw,2.8rem);font-weight:300;color:var(--cream);line-height:1.25;max-width:880px;margin:1rem auto 1.5rem;letter-spacing:-0.01em;">We rebuilt Siren's valuation to <em style="font-style:italic;color:var(--burg2);">97.6%</em> — and that same clarity exposed a fair-lending pattern the board can't ignore.</h2>
-    <p style="font-size:0.98rem;color:var(--muted-d);line-height:1.85;max-width:640px;margin:0 auto;">The model is an asset; the disparity is a liability. <strong style="color:var(--cream);font-weight:500;">Proceed — but only with the legal opinion, the indemnity, and the remediation plan written into the deal.</strong> Manage the tail, not the average.</p>
+    <h2 style="font-family:var(--serif);font-size:clamp(1.8rem,4vw,2.8rem);font-weight:300;color:var(--cream);line-height:1.25;max-width:880px;margin:1rem auto 1.5rem;letter-spacing:-0.01em;">We can show the buyer exactly why Siren is worth <em style="font-style:italic;color:var(--burg2);">97.6%</em> of their own model's number — and how to raise it.</h2>
+    <p style="font-size:0.98rem;color:var(--muted-d);line-height:1.85;max-width:640px;margin:0 auto;">The value levers are ours to pull. The fairness finding is ours too — so we fix it and disclose it before the buyer's lawyers turn it into a discount. <strong style="color:var(--cream);font-weight:500;">Lead with the upside; never hide the risk.</strong></p>
   </div>
 </section>
 
@@ -1817,5 +1852,58 @@ show(4);
 // Re-fit charts after the web font loads (fixes y-axis label clipping from early measurement)
 (function(){function refit(){try{Object.keys(Chart.instances).forEach(function(k){var c=Chart.instances[k];c.resize();c.update('none');});}catch(e){}}if(window.Chart){if(document.fonts&&document.fonts.ready){document.fonts.ready.then(refit);}window.addEventListener('load',refit);setTimeout(refit,500);}})();
 </script>
+
+<button id="guideOrb" aria-label="Open the guide" title="Ask the guide">?</button>
+<div id="guidePanel" role="dialog" aria-label="Report guide">
+  <div id="guideHead"><span>Ask the guide</span><span class="gx" id="guideX">&times;</span></div>
+  <div id="guideBody"></div>
+</div>
+<script>
+/* ===== TABS ===== */
+var __curTab="overview";
+function go(tab){
+  __curTab=tab;
+  document.querySelectorAll('section[data-tab]').forEach(function(s){s.style.display=(s.getAttribute('data-tab')===tab)?'':'none';});
+  document.querySelectorAll('.tabbtn').forEach(function(b){b.classList.toggle('active',b.getAttribute('data-tab')===tab);});
+  requestAnimationFrame(function(){
+    document.querySelectorAll('section[data-tab="'+tab+'"] .reveal').forEach(function(el){el.classList.add('in');});
+    if(window.Chart&&Chart.instances){for(var k in Chart.instances){try{Chart.instances[k].resize();}catch(e){}}}
+    window.scrollTo(0,0);
+  });
+  if(window.__guideRefresh)window.__guideRefresh();
+}
+document.querySelectorAll('.tabbtn').forEach(function(b){b.addEventListener('click',function(){go(b.getAttribute('data-tab'));});});
+/* ===== GUIDE / CHATBOT ===== */
+(function(){
+  var G={
+   overview:{i:"You're on the <b>one-screen summary</b>: what we did, the headline fairness finding, and our recommendation.",q:[
+     ["What does \"97.64%\" mean?","We can reproduce the bank's own customer-value figures to within about 2.4% on average — so the valuation engine is now a known, auditable asset, not a black box."],
+     ["What's the big risk?","One fairness pattern: compulsory insurance is imposed far more on Black and foreign-born borrowers, regardless of credit score — direct exposure under fair-lending law (ECOA)."],
+     ["So what should the board do?","Proceed, but conditionally — close only with a fair-lending legal opinion, indemnity/escrow, and a remediation plan. Full plan on the Actions tab."]]},
+   model:{i:"This tab explains <b>how we reverse-engineered the bank's pricing</b>, in plain steps (see 'The Climb').",q:[
+     ["How did you crack the black box?","We sorted calls by loan status, then predicted a ratio (value ÷ a financial base) instead of raw dollars, using gradient-boosted decision trees. That ratio trick was the breakthrough."],
+     ["What drives a call's value most?","Repayment status dominates, then outstanding balance and amount paid. A performing loan is worth roughly 75× a rejected call."]]},
+   fairness:{i:"The <b>discrimination audit</b> — what's real, what's large, and what it means legally.",q:[
+     ["Is this proven discrimination?","It's a robust statistical pattern, not a court verdict. But under ECOA, intent isn't required — a systematic disparity is enough to create legal exposure."],
+     ["Could credit risk explain it?","No. The insurance gap holds at every credit-score level — if it were risk-based it would track credit score, and it doesn't."]]},
+   dealrisk:{i:"What the findings mean <b>for the deal</b> — in money and exposure.",q:[
+     ["How big is the financial hit?","The directly measurable overcharge is small (~$104K/year). The real exposure is regulatory and reputational — uncertain but potentially material. Manage the tail, not the average."]]},
+   tools:{i:"Two <b>interactive tools</b> to explore the model yourself.",q:[
+     ["How do I use the simulator?","Pick a loan status and drag the inputs. The sensitivity bar shows which inputs move value the most before you start."],
+     ["What's the what-if for?","Change a borrower's identity and watch the algorithm: value barely moves, but the compulsory-insurance line leaps. That's the finding, made tangible."]]},
+   actions:{i:"<b>Prioritised recommendations</b> and our ethical obligations.",q:[
+     ["What comes first?","Before the deal closes: commission a fair-lending legal opinion and put indemnity/escrow into the purchase agreement. The rest follows on a 90-day / 12-month horizon."]]}
+  };
+  var panel=document.getElementById('guidePanel'),orb=document.getElementById('guideOrb'),body=document.getElementById('guideBody'),x=document.getElementById('guideX');
+  function render(){var g=G[__curTab]||G.overview;var html='<div class="g-intro">'+g.i+'</div>';g.q.forEach(function(qa,i){html+='<button class="g-q" data-i="'+i+'">'+qa[0]+'</button>';});body.innerHTML=html;
+    body.querySelectorAll('.g-q').forEach(function(btn){btn.addEventListener('click',function(){var qa=g.q[+btn.dataset.i];var a=document.createElement('div');a.className='g-a';a.innerHTML='<b style="color:var(--burg2)">'+qa[0]+'</b><br>'+qa[1];btn.insertAdjacentElement('afterend',a);btn.style.display='none';});});}
+  function open(o){panel.classList.toggle('show',o);if(o)render();}
+  orb.addEventListener('click',function(){open(!panel.classList.contains('show'));});
+  x.addEventListener('click',function(){open(false);});
+  window.__guideRefresh=function(){if(panel.classList.contains('show'))render();};
+})();
+go('overview');
+</script>
+
 </body>
 </html>
