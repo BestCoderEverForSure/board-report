@@ -401,6 +401,21 @@ footer{background:var(--wine2);color:var(--muted-d);padding:3rem;display:flex;al
 
 /* ─── CHART CANVAS ────────────────────────────────────── */
 canvas{max-height:260px;}
+.climb{margin:0.5rem 0 3.5rem;}
+.climb-h{font-family:var(--serif);font-size:clamp(1.6rem,3.5vw,2.4rem);font-weight:300;color:var(--cream);line-height:1.15;margin:0.5rem 0 0.6rem;}
+.climb-h em{font-style:italic;color:var(--burg2);}
+.climb-lede{font-size:0.9rem;color:var(--muted-d);line-height:1.8;max-width:640px;margin-bottom:2rem;}
+.climb-track{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:0.7rem;}
+.climb-step{background:rgba(255,255,255,0.03);border:1px solid var(--line-d);border-bottom:2px solid var(--line-d);padding:0.95rem 0.8rem;cursor:pointer;text-align:left;transition:background .25s,border-color .25s;border-radius:2px;font-family:var(--sans);}
+.climb-step:hover{background:rgba(196,97,77,0.08);}
+.climb-step.on{background:rgba(196,97,77,0.12);border-bottom-color:var(--burg2);}
+.cs-acc{display:block;font-family:var(--serif);font-size:1.5rem;color:var(--burg2);line-height:1;}
+.cs-nm{display:block;font-size:0.66rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted-d);margin-top:0.45rem;line-height:1.3;}
+.climb-step.on .cs-nm{color:var(--cream);}
+.climb-detail{border:1px solid var(--line-d);border-left:2px solid var(--burg2);background:rgba(255,255,255,0.03);padding:1.4rem 1.6rem;margin-top:0.7rem;}
+.climb-detail .cd-acc{font-family:var(--serif);font-size:1.05rem;color:var(--burg2);margin-bottom:0.5rem;}
+.climb-detail .cd-acc span{color:var(--cream);}
+.climb-detail p{font-size:0.88rem;color:var(--muted-d);line-height:1.8;margin:0;}
 
 /* ─── RESPONSIVE ──────────────────────────────────────── */
 @media(max-width:768px){
@@ -636,6 +651,21 @@ canvas{max-height:260px;}
       <p class="s-desc" style="padding-top:1rem;">
         The bank's proprietary system, treated as a black box, was opened with six per-segment, MAE-optimized gradient-boosted models trained on 231,276 historical calls — reproducing its outputs to within ~2.4% on average (graded 97.64%).
       </p>
+    </div>
+
+    <!-- ===== THE CLIMB (journey to 97.64%) ===== -->
+    <div class="climb reveal">
+      <span class="s-tag" style="color:var(--burg2);">— How we got here</span>
+      <h3 class="climb-h">From a naive guess to <em>97.64%</em>.</h3>
+      <p class="climb-lede">Accuracy didn't arrive in one leap — it came from five deliberate decisions, each fixing a specific weakness in the one before. Tap any step to see what changed, and why.</p>
+      <div class="climb-track">
+        <button class="climb-step" data-i="0"><span class="cs-acc">~6%</span><span class="cs-nm">Guess the average</span></button>
+        <button class="climb-step" data-i="1"><span class="cs-acc">90.2%</span><span class="cs-nm">One model</span></button>
+        <button class="climb-step" data-i="2"><span class="cs-acc">96.8%</span><span class="cs-nm">Six specialists</span></button>
+        <button class="climb-step" data-i="3"><span class="cs-acc">97.55%</span><span class="cs-nm">Ratio + ensemble</span></button>
+        <button class="climb-step on" data-i="4"><span class="cs-acc">97.64%</span><span class="cs-nm">Blend &amp; tune</span></button>
+      </div>
+      <div class="climb-detail" id="climbDetail"></div>
     </div>
 
     <!-- THREE KEY DISCOVERIES -->
@@ -1209,6 +1239,7 @@ canvas{max-height:260px;}
           <div class="demo-row"><span>vs. four-group average</span><span id="demoGVgap">−$86 (−3.8%)</span></div>
           <div class="demo-row"><span>Acceptance rate</span><span id="demoAcc">54.8% (vs 56.8%)</span></div>
           <div class="demo-row"><span>Avg interest rate (accepted)</span><span id="demoRate">14.95% (vs 14.86%)</span></div>
+          <div class="demo-row" style="border-bottom:1px solid rgba(139,44,62,0.3);"><span>Compulsory insurance imposed</span><span id="demoIns" style="color:var(--burg);font-weight:600;">22.0%</span></div>
         </div>
       </div>
 
@@ -1744,10 +1775,10 @@ configFields();
 
 // ─── DEMOGRAPHIC WHAT-IF ───────────────────────────────────────────────────
 const DEMO = {
-  white:{label:'White alone',     value:2171.56, acc:54.75, rate:14.948},
-  black:{label:'Black alone',     value:2343.44, acc:56.82, rate:14.895},
-  asian:{label:'Asian alone',     value:2302.87, acc:57.52, rate:14.811},
-  sor:  {label:'Some Other Race', value:2314.50, acc:58.17, rate:14.774}
+  white:{label:'White alone',     value:2171.56, acc:54.75, rate:14.948, ins:22.0},
+  black:{label:'Black alone',     value:2343.44, acc:56.82, rate:14.895, ins:48.9},
+  asian:{label:'Asian alone',     value:2302.87, acc:57.52, rate:14.811, ins:26.3},
+  sor:  {label:'Some Other Race', value:2314.50, acc:58.17, rate:14.774, ins:27.0}
 };
 const BOOK_V=2257.66, ACC_AVG=56.82, RATE_AVG=14.857;
 function demoUpdate(){
@@ -1759,6 +1790,7 @@ function demoUpdate(){
   document.getElementById('demoGVgap').textContent=sign+'$'+Math.abs(Math.round(gap)).toLocaleString()+' ('+sign+Math.abs(gapPct).toFixed(1)+'%)';
   document.getElementById('demoAcc').textContent=g.acc.toFixed(1)+'% (vs '+ACC_AVG.toFixed(1)+'%)';
   document.getElementById('demoRate').textContent=g.rate.toFixed(2)+'% (vs '+RATE_AVG.toFixed(2)+'%)';
+  document.getElementById('demoIns').textContent=g.ins.toFixed(1)+'%';
   document.getElementById('demoValueLoss').textContent='−'+(f*g.value/BOOK_V*100).toFixed(0)+'%';
   const avgShift=((BOOK_V-f*g.value)/(1-f)-BOOK_V)/BOOK_V*100, s2=avgShift>=0?'+':'−';
   document.getElementById('demoAvgShift').textContent=s2+Math.abs(avgShift).toFixed(1)+'%';
@@ -1766,6 +1798,21 @@ function demoUpdate(){
 }
 document.getElementById('demoGroup').addEventListener('change',demoUpdate);
 demoUpdate();
+
+// ===== THE CLIMB journey =====
+(function(){
+var D=[
+{a:"~6%",t:"Guess the average",b:"Predict one number — the typical call value — for every call. It scores about 6%. The bank's logic is clearly not one-size-fits-all, so this is only our floor."},
+{a:"90.2%",t:"One model, wrong metric",b:"A single gradient-boosted model on the raw dollar value, tuned for statistical fit (R²). It captured the average call but badly under-priced the rare, high-value loans the bank cares about most. The lesson that unlocked everything: optimise what is actually graded — dollar error — not statistical fit."},
+{a:"96.8%",t:"Six specialists",b:"A $55 rejection and a $68,000 performing loan cannot share one pricing rule. We split every call by repayment status and trained a specialist model for each of the six regimes, each minimising dollar error directly. The single biggest jump."},
+{a:"97.55%",t:"Ratio targets + ensemble",b:"The breakthrough: instead of predicting dollars, predict the ratio of value to a financial base, then multiply back — so no model ever guesses across orders of magnitude. Leaf-wise, squared-error gradient boosting, averaged over many random seeds. On-time error fell from $327 to about $84."},
+{a:"97.64%",t:"Blend & tune",b:"The last 0.8 points — the part most teams left on the table. Route each segment to whichever algorithm prices it best (a second library, LightGBM, wins on closed loans), then tune the blend weights against the grading metric itself. Disciplined, unglamorous, decisive."}
+];
+var steps=document.querySelectorAll('.climb-step'),det=document.getElementById('climbDetail');
+function show(i){if(!det)return;var d=D[i];det.innerHTML='<div class="cd-acc">'+d.a+' · <span>'+d.t+'</span></div><p>'+d.b+'</p>';for(var j=0;j<steps.length;j++){steps[j].classList.toggle('on',j===i);}}
+for(var k=0;k<steps.length;k++){steps[k].addEventListener('click',(function(idx){return function(){show(idx);};})(+steps[k].dataset.i));}
+show(4);
+})();
 
 // Re-fit charts after the web font loads (fixes y-axis label clipping from early measurement)
 (function(){function refit(){try{Object.keys(Chart.instances).forEach(function(k){var c=Chart.instances[k];c.resize();c.update('none');});}catch(e){}}if(window.Chart){if(document.fonts&&document.fonts.ready){document.fonts.ready.then(refit);}window.addEventListener('load',refit);setTimeout(refit,500);}})();
