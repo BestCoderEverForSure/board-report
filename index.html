@@ -520,7 +520,7 @@ canvas{max-height:260px;}
         <div class="reco-pill">
           <span class="rl">Our recommendation to the board</span>
           <div class="rt">Proceed — but conditionally.</div>
-          <p>Do not walk, and do not sign as-is. Close only with (a) a pre-close fair-lending legal opinion, (b) reps, warranties, indemnity and an escrow covering fair-lending exposure, and (c) a remediation-and-monitoring plan as a condition of closing. Detail in the Action Plan.</p>
+          <p>Do not walk, and do not sign as-is. Close only with (a) a pre-close fair-lending legal opinion, (b) reps, warranties, indemnity and an escrow covering fair-lending exposure, and (c) a remediation-and-monitoring plan as a condition of closing. Detail in the Action Plan. The upside is real, too: once remediated, the same model reveals concrete levers to lift value per caller — see Drivers.</p>
         </div>
       </div>
 
@@ -697,6 +697,7 @@ canvas{max-height:260px;}
         <div style="border:1px solid var(--line-d);padding:1.75rem;background:rgba(255,255,255,0.03);">
           <canvas id="segPie" role="img" aria-label="Doughnut chart of call volume by loan status: not accepted 11,239, on-time active 10,140, loan closed 2,136, delinquent 1,419, charged off 750."></canvas>
         </div>
+        <p style="font-size:0.73rem;color:var(--muted-d);margin-top:1rem;line-height:1.6;font-style:italic;">Not-accepted (44%) and on-time (39%) calls are 83% of the book — and where the entire modelling challenge sits.</p>
       </div>
     </div>
 
@@ -755,11 +756,16 @@ canvas{max-height:260px;}
       <span class="s-tag" style="color:var(--burg);">— Practical Implication · Phase 3</span>
       <h3 style="font-family:var(--serif);font-size:1.9rem;font-weight:400;color:var(--text-l);margin:0.4rem 0 0.6rem;line-height:1.15;">Three levers to raise value <em style="font-style:italic;color:var(--burg);">per future caller</em></h3>
       <p style="font-size:0.9rem;color:var(--muted-l);line-height:1.8;max-width:660px;">The drivers that explain VALUE also show where management can grow it — ranked by impact per call. Each assumes the <em>remediated, fair</em> model; none should be pursued through the protected-class patterns flagged in the audit.</p>
+      <div class="chart-box" style="margin:2.25rem 0;">
+        <div class="chart-label">The value gradient — a performing loan is worth ~75× a rejected call</div>
+        <canvas id="valueLadderChart" role="img" aria-label="Horizontal bar chart of average call VALUE by segment: not accepted $55, loan closed $2,430, charged off $2,590, on-time performing $4,160."></canvas>
+        <p class="chart-note">Each rung is a segment's average VALUE. The jump from a rejected call ($55) to a performing loan (~$4,160) is the prize the three levers below target.</p>
+      </div>
       <div class="lever-grid">
         <div class="lever">
           <div class="lv-n">01</div>
           <h4>Convert more applicants</h4>
-          <p>A rejected call is worth ~$55; a performing loan ~$4,200 — an <strong>~80× jump</strong>. Extending fair, risk-based approval to creditworthy applicants who are currently declined is the single biggest move on average value per caller.</p>
+          <p>A rejected call is worth ~$55; a performing loan ~$4,200 — an <strong>~75× jump</strong>. Extending fair, risk-based approval to creditworthy applicants who are currently declined is the single biggest move on average value per caller.</p>
         </div>
         <div class="lever">
           <div class="lv-n">02</div>
@@ -1140,14 +1146,14 @@ canvas{max-height:260px;}
           <label>Loan Amount <span class="na-tag">not used here</span></label>
           <div class="range-wrap">
             <input type="range" id="loanAmt" min="1000" max="3000" value="2000" step="100"
-              oninput="document.getElementById('loanAmtVal').textContent='$'+Number(this.value).toLocaleString();calcValue()">
+              oninput="document.getElementById('loanAmtVal').textContent='$'+Number(this.value).toLocaleString();rebound();calcValue()">
             <span class="range-val" id="loanAmtVal">$2,000</span>
           </div>
         </div>
         <div class="calc-field" id="field-totalpaid">
           <label>Total Amount Paid <span class="na-tag">not used here</span></label>
           <div class="range-wrap">
-            <input type="range" id="totalPaid" min="0" max="15000" value="1500" step="100"
+            <input type="range" id="totalPaid" min="0" max="3000" value="1500" step="100"
               oninput="document.getElementById('totalPaidVal').textContent='$'+Number(this.value).toLocaleString();calcValue()">
             <span class="range-val" id="totalPaidVal">$1,500</span>
           </div>
@@ -1155,7 +1161,7 @@ canvas{max-height:260px;}
         <div class="calc-field" id="field-outstanding">
           <label>Outstanding Principal <span class="na-tag">not used here</span></label>
           <div class="range-wrap">
-            <input type="range" id="outstanding" min="0" max="10000" value="800" step="100"
+            <input type="range" id="outstanding" min="0" max="2000" value="800" step="100"
               oninput="document.getElementById('outstandingVal').textContent='$'+Number(this.value).toLocaleString();calcValue()">
             <span class="range-val" id="outstandingVal">$800</span>
           </div>
@@ -1171,7 +1177,7 @@ canvas{max-height:260px;}
           Based on our reverse-engineered model; the segment's average error is shown above. Overall accuracy: <strong>97.64%</strong> (graded; MAE ≈ $53 vs. mean call value ≈ $2,233).
         </p>
         <p class="calc-disclaimer">
-          How to read this: <em>Rejected</em> and <em>Loan Closed</em> use the bank's near-exact recovered formulas; active-loan segments use a simplified illustration of our models. Greyed-out inputs are the ones a given status doesn't depend on — that's expected, not a bug — and the Loan Amount range adapts to the selected segment.
+          How to read this: <em>Rejected</em> and <em>Loan Closed</em> use the bank's near-exact recovered formulas; active-loan segments use a simplified illustration of our models. Greyed-out inputs are the ones a given status doesn't depend on — that's expected, not a bug — and the Loan Amount range adapts to the selected segment, and the Paid / Outstanding caps scale with the loan so the inputs stay realistic.
         </p>
       </div>
     </div>
@@ -1316,7 +1322,7 @@ canvas{max-height:260px;}
       <div class="eth-card">
         <div class="eth-num">I — Methodology</div>
         <h3>Methodological Integrity</h3>
-        <p>Established tests throughout: ANOVA for group VALUE differences, Chi-square for categorical associations, two-sample t-tests for continuous outcomes, with full statistics reported. Given the large sample, we report uncorrected p-values but emphasise effect sizes — and note that even under conservative multiple-comparison corrections, the race and acceptance findings remain significant.</p>
+        <p>Established tests throughout: ANOVA for group VALUE differences, Chi-square for categorical associations, two-sample t-tests for continuous outcomes, with full statistics reported. Given the large sample, we report uncorrected p-values but emphasise effect sizes — and note that even under conservative multiple-comparison corrections, the race and acceptance findings remain significant. Every fairness figure in this report was re-derived directly from the full 231,276-record ledger.</p>
       </div>
       <div class="eth-card">
         <div class="eth-num">II — Affected Parties</div>
@@ -1348,6 +1354,15 @@ canvas{max-height:260px;}
     <div class="caveat-box reveal">
       <p><strong>A note on the limits of this analysis —</strong> Our findings come from observational data and univariate tests. We cannot rule out that the disparities are explained by legitimate credit-risk factors absent from the call ledger (credit scores, debt-to-income, etc.), and we do not claim to have proven discrimination. What we can say is that the patterns are statistically robust and systematic along protected lines. <strong>Given what is at stake in this transaction, the prudent commercial posture is to require Siren Capital to evidence a risk-based justification as a condition of closing — rather than for the board to assume innocence — and to confirm or clear each flag with a controlled audit on complete credit data.</strong></p>
     </div>
+  </div>
+</section>
+
+<!-- ═══ THE BOTTOM LINE ═══ -->
+<section style="background:var(--wine2);padding:6rem 0;border-top:1px solid var(--line-d);">
+  <div class="container" style="text-align:center;">
+    <span class="s-tag" style="color:var(--burg2);">— The bottom line</span>
+    <h2 style="font-family:var(--serif);font-size:clamp(1.8rem,4vw,2.8rem);font-weight:300;color:var(--cream);line-height:1.25;max-width:880px;margin:1rem auto 1.5rem;letter-spacing:-0.01em;">We rebuilt Siren's valuation to <em style="font-style:italic;color:var(--burg2);">97.6%</em> — and that same clarity exposed a fair-lending pattern the board can't ignore.</h2>
+    <p style="font-size:0.98rem;color:var(--muted-d);line-height:1.85;max-width:640px;margin:0 auto;">The model is an asset; the disparity is a liability. <strong style="color:var(--cream);font-weight:500;">Proceed — but only with the legal opinion, the indemnity, and the remediation plan written into the deal.</strong> Manage the tail, not the average.</p>
   </div>
 </section>
 
@@ -1474,7 +1489,7 @@ new Chart(document.getElementById('errorContribChart'),{
     plugins:{legend:{display:false},valueLabels:{color:CREAM,fmt:v=>'$'+v.toFixed(1)}},
     scales:{
       x:{beginAtZero:true,max:54,ticks:{callback:v=>'$'+v,color:MUTED,font:{family:"'Inter',sans-serif",size:10}},grid:{color:'rgba(255,255,255,0.06)'},border:{display:false}},
-      y:{grid:{display:false},ticks:{color:MUTED,font:{family:"'Inter',sans-serif",size:10}}}
+      y:{afterFit:function(s){s.width+=36;},grid:{display:false},ticks:{color:MUTED,font:{family:"'Inter',sans-serif",size:10}}}
     }
   }
 });
@@ -1496,7 +1511,7 @@ new Chart(document.getElementById('featureChart'),{
     plugins:{legend:{display:false},valueLabels:{color:INK,fmt:v=>v}},
     scales:{
       x:{beginAtZero:true,max:112,ticks:{callback:v=>v,color:'#6b5c56',font:{family:"'Inter',sans-serif",size:10}},grid:{color:'rgba(30,24,16,0.08)'},border:{display:false}},
-      y:{grid:{display:false},ticks:{color:'#6b5c56',font:{family:"'Inter',sans-serif",size:10}}}
+      y:{afterFit:function(s){s.width+=36;},grid:{display:false},ticks:{color:'#6b5c56',font:{family:"'Inter',sans-serif",size:10}}}
     }
   }
 });
@@ -1609,7 +1624,7 @@ new Chart(document.getElementById('insuranceRaceChart'),{
     responsive:true,maintainAspectRatio:true,layout:{padding:{top:18}},
     plugins:{legend:{display:false},valueLabels:{color:CREAM,fmt:v=>v.toFixed(1)+'%'}},
     scales:{
-      y:{beginAtZero:true,max:55,ticks:{callback:v=>v+'%',color:MUTED,font:{family:"'Inter',sans-serif",size:10}},grid:{color:'rgba(255,255,255,0.06)'},border:{display:false}},
+      y:{beginAtZero:true,max:60,ticks:{stepSize:10,callback:v=>v+'%',color:MUTED,font:{family:"'Inter',sans-serif",size:10}},grid:{color:'rgba(255,255,255,0.06)'},border:{display:false}},
       x:{grid:{display:false},ticks:{color:MUTED,font:{family:"'Inter',sans-serif",size:10}}}
     }
   }
@@ -1641,9 +1656,9 @@ new Chart(document.getElementById('insuranceControlChart'),{
 new Chart(document.getElementById('insuranceNativChart'),{
   type:'bar',
   data:{labels:['Foreign-born','Native-born'],datasets:[{data:[100.0,15.6],backgroundColor:['#c4614d','#4a1028'],borderWidth:0,barThickness:70}]},
-  options:{responsive:true,maintainAspectRatio:true,layout:{padding:{top:18}},
+  options:{responsive:true,maintainAspectRatio:true,layout:{padding:{top:32}},
     plugins:{legend:{display:false},valueLabels:{color:CREAM,fmt:v=>v.toFixed(1)+'%'}},
-    scales:{y:{beginAtZero:true,max:112,ticks:{callback:v=>v+'%',color:MUTED,font:{family:"'Inter',sans-serif",size:10}},grid:{color:'rgba(255,255,255,0.06)'},border:{display:false}},
+    scales:{y:{beginAtZero:true,max:100,ticks:{stepSize:20,callback:v=>v+'%',color:MUTED,font:{family:"'Inter',sans-serif",size:10}},grid:{color:'rgba(255,255,255,0.06)'},border:{display:false}},
       x:{grid:{display:false},ticks:{color:MUTED,font:{family:"'Inter',sans-serif",size:10}}}}}
 });
 
@@ -1653,8 +1668,26 @@ new Chart(document.getElementById('insuranceNativeRaceChart'),{
   data:{labels:['White alone','Some Other Race','Asian alone','Black alone'],datasets:[{data:[10.1,9.9,9.5,40.9],backgroundColor:['#4a1028','#7a2336','#8b2c3e','#c4614d'],borderWidth:0}]},
   options:{responsive:true,maintainAspectRatio:true,layout:{padding:{top:18}},
     plugins:{legend:{display:false},valueLabels:{color:CREAM,fmt:v=>v.toFixed(1)+'%'}},
-    scales:{y:{beginAtZero:true,max:48,ticks:{callback:v=>v+'%',color:MUTED,font:{family:"'Inter',sans-serif",size:10}},grid:{color:'rgba(255,255,255,0.06)'},border:{display:false}},
+    scales:{y:{beginAtZero:true,max:50,ticks:{stepSize:10,callback:v=>v+'%',color:MUTED,font:{family:"'Inter',sans-serif",size:10}},grid:{color:'rgba(255,255,255,0.06)'},border:{display:false}},
       x:{grid:{display:false},ticks:{color:MUTED,font:{family:"'Inter',sans-serif",size:10}}}}}
+});
+
+// --- VALUE LADDER (value gradient -> motivates the levers) ---
+new Chart(document.getElementById('valueLadderChart'),{
+  type:'bar',
+  data:{
+    labels:['Not accepted','Loan closed','Charged off','On-time (performing)'],
+    datasets:[{data:[55,2430,2590,4160],backgroundColor:['#cbb8ae','#c4614d','#c4614d','#8b2c3e'],borderWidth:0}]
+  },
+  options:{
+    indexAxis:'y',responsive:true,maintainAspectRatio:true,
+    layout:{padding:{right:56}},
+    plugins:{legend:{display:false},valueLabels:{color:INK,fmt:v=>'$'+v.toLocaleString()}},
+    scales:{
+      x:{beginAtZero:true,max:4700,ticks:{callback:v=>'$'+v.toLocaleString(),color:'#6b5c56',font:{family:"'Inter',sans-serif",size:10}},grid:{color:'rgba(30,24,16,0.08)'},border:{display:false}},
+      y:{afterFit:function(s){s.width+=36;},grid:{display:false},ticks:{color:'#6b5c56',font:{family:"'Inter',sans-serif",size:10}}}
+    }
+  }
 });
 
 // ─── CALCULATOR (value simulator) ──────────────────────────────────────────
@@ -1667,6 +1700,7 @@ const SEG = {
   charged_off:   {uses:['totalPaid'],                        amt:[100,8000], err:64,  name:'Charged-Off Segment',        note:'Value tracks partial repayments recovered; based on total paid.'},
   delinquent:    {uses:['totalPaid','outstanding'],          amt:[100,8000], err:185, name:'Delinquent Segment',         note:'Uses outstanding balance and total paid; high uncertainty (±$185).'}
 };
+function rebound(){var seg=document.getElementById('calcStatus').value,L=+document.getElementById('loanAmt').value,out=document.getElementById('outstanding'),tp=document.getElementById('totalPaid'),oM,tM;if(seg.indexOf('on_time')===0){oM=Math.round(L);tM=Math.round(L*1.5);}else{oM=8000;tM=10000;}out.max=oM;if(+out.value>oM){out.value=oM;}tp.max=tM;if(+tp.value>tM){tp.value=tM;}document.getElementById('outstandingVal').textContent='$'+(+out.value).toLocaleString();document.getElementById('totalPaidVal').textContent='$'+(+tp.value).toLocaleString();}
 function configFields(){
   const cfg=SEG[document.getElementById('calcStatus').value];
   const la=document.getElementById('loanAmt');
@@ -1680,6 +1714,7 @@ function configFields(){
     document.getElementById(id).disabled=!active;
   });
   document.getElementById('calcHint').textContent=cfg.note;
+  rebound();
   calcValue();
 }
 function calcValue(){
@@ -1692,9 +1727,9 @@ function calcValue(){
   switch(status){
     case 'rejected': value=54.74;break;
     case 'closed': value=0.998*totalPaid+88.63;break;
-    case 'on_time_small': value=(0.42+(outstanding/(loanAmt+1))*0.95+(totalPaid/loanAmt)*0.28)*loanAmt; value=Math.max(50,Math.min(value,loanAmt*1.3));break;
-    case 'on_time_med': value=(0.38+(outstanding/(loanAmt+1))*1.1+(totalPaid/loanAmt)*0.22)*loanAmt; value=Math.max(100,Math.min(value,loanAmt*2.1));break;
-    case 'on_time_large': value=(0.35+(outstanding/(loanAmt+1))*1.25+(totalPaid/loanAmt)*0.18)*loanAmt; value=Math.max(200,Math.min(value,loanAmt*2.5));break;
+    case 'on_time_small': value=(0.09+(outstanding/(loanAmt+1))*0.95+(totalPaid/loanAmt)*0.5)*loanAmt; value=Math.max(50,Math.min(value,loanAmt*1.3));break;
+    case 'on_time_med': value=(0.17+(outstanding/(loanAmt+1))*1.1+(totalPaid/loanAmt)*0.5)*loanAmt; value=Math.max(100,Math.min(value,loanAmt*2.1));break;
+    case 'on_time_large': value=(0.19+(outstanding/(loanAmt+1))*1.25+(totalPaid/loanAmt)*0.5)*loanAmt; value=Math.max(200,Math.min(value,loanAmt*2.5));break;
     case 'charged_off': value=totalPaid*0.55+180;break;
     case 'delinquent': value=outstanding*0.45+totalPaid*0.12-200;break;
     default: value=1000;
@@ -1731,6 +1766,9 @@ function demoUpdate(){
 }
 document.getElementById('demoGroup').addEventListener('change',demoUpdate);
 demoUpdate();
+
+// Re-fit charts after the web font loads (fixes y-axis label clipping from early measurement)
+(function(){function refit(){try{Object.keys(Chart.instances).forEach(function(k){var c=Chart.instances[k];c.resize();c.update('none');});}catch(e){}}if(window.Chart){if(document.fonts&&document.fonts.ready){document.fonts.ready.then(refit);}window.addEventListener('load',refit);setTimeout(refit,500);}})();
 </script>
 </body>
 </html>
